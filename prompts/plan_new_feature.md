@@ -15,7 +15,7 @@ Act as a Staff Software Engineer and System Architect. I want you to help me bui
 Here are the requirements for the new feature:
 [PASTE FEATURE DESCRIPTION AND REQUIREMENTS HERE]
 
-[OPTIONAL: Insert any specific constraints, like "It must use React Context" or "It must be a POST endpoint in FastAPI"]
+[OPTIONAL: Insert any specific constraints, like "It must be a new ROS2 Node using rclcpp" or "It must be a POST endpoint in FastAPI"]
 
 Before you write any production code, you MUST adhere to the following strict process:
 

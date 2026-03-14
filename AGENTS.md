@@ -25,6 +25,7 @@ When assisting a user with modifying or adding to this repository, adhere strict
 4. **Template Quality:** When generating new templates (e.g., in `/context_files/` or `/prompts/`), ensure they are strictly formatted, professional, and do not contain conversational filler or hallucinated application code.
 5. **Generalization:** While the primary focus is the Gemini CLI, keep concepts, prompts, and practices as generic as possible so they provide value to users of all AI coding agents (e.g., Claude Code, Copilot).
 6. **No Direct Execution:** Do not "test" example prompts or configurations by executing them against this repository unless specifically asked to do so by the user to validate a workflow.
+7. **Interpret and Improve:** The user often provides shorthand ideas or raw thoughts in their prompts. Unless explicitly told otherwise, do not just copy and paste their raw text into the repository. Your goal is to reinterpret, refine, and elevate their wording, converting their shorthand into organized, professional, and well-structured documentation. Actively offer improvements and help refine their ideas.
 
 ## Structure Maintenance
 When adding new resources, organize them logically into the established directories:
