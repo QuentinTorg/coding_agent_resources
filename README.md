@@ -29,18 +29,8 @@ If you are a senior engineer but a beginner to AI agents, your instincts might b
 2. **Break Tasks Down (Atomic Steps):** Do not give the agent a massive prompt like *"Build the new perception pipeline."* Instead, break it down: *"Draft a design doc for the perception pipeline,"* followed by *"Implement the data ingestion node,"* followed by *"Write unit tests for the ingestion node."* Small, verifiable steps prevent compounding errors.
 3. **Trust, but Verify:** Agents will confidently hallucinate nonexistent APIs or subtly break logic. Never blindly merge agent-written code. Always require the agent to write tests, or manually run your build/test suite after it finishes a task.
 4. **Leverage Its Tools:** The agent is not just a text generator. It has access to your terminal. Instead of pasting code into the chat, tell the agent: *"Use `grep` to find where the `User` class is defined and explain its dependencies."* Let it do the legwork.
-
-### 🧠 Core Philosophy: Agents Are Always Guessing
-When you interact with a coding agent, remember one fundamental truth: **The agent is always guessing.** It lacks the years of context, the implicit team knowledge, and the whiteboard architecture sessions that you have experienced. Every decision it makes is a statistical guess based on the limited text in its immediate context window.
-
-Therefore, it is your job as the pilot to provide the necessary background, enforce strict guardrails, and minimize the amount of guessing the agent has to do. If you give an agent a massive, vague prompt without a structured workflow, it will guess your architecture and likely get it wrong. The key to success is forcing the agent into structured, step-by-step workflows.
-
-### 🧠 Directives vs. Inquiries
-A common beginner mistake is asking a question and getting frustrated when the agent unexpectedly modifies code to "fix" it. To master an agent, you must understand the difference between asking a question and giving an order:
-*   **Inquiries:** Requests for analysis, explanation, or opinion (e.g., *"Why is this function crashing?"* or *"What do you think of this architecture?"*). An agent should *only* respond with text.
-*   **Directives:** Unambiguous orders to execute a task (e.g., *"Fix the crash in this function,"* or *"Implement the architecture we just discussed."*).
-*   **The Habit:** If your agent constantly jumps the gun, update your `user_level.AGENTS.md` (as shown in our template) to explicitly enforce this boundary, telling it to wait for a Directive before taking action.
-
+5. **Agents Are Always Guessing:** The agent lacks the implicit team knowledge and years of context you have. Every decision is a statistical guess based on its immediate context window. It is your job to minimize the guessing by providing necessary background, enforcing strict guardrails, and forcing structured workflows.
+6. **Directives vs. Inquiries:** Understand the difference between asking a question and giving an order. An **Inquiry** (e.g., *"Why is this function crashing?"*) is a request for text analysis. A **Directive** (e.g., *"Fix the crash"*) is an order to execute a task. Enforce this boundary in your `user_level.AGENTS.md` so the agent waits for a Directive before taking action.
 </details>
 
 ---
