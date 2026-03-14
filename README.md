@@ -20,6 +20,9 @@ You can use agents to:
 
 ## Core Fundamentals (Before You Start)
 
+<details>
+<summary><strong>Read the Core Fundamentals</strong></summary>
+
 If you are a senior engineer but a beginner to AI agents, your instincts might betray you. You cannot interact with an agent the same way you interact with a human colleague or a simple Google search. Before diving into the technical setup, you must adopt the right mindset:
 
 1. **You are the Pilot:** The agent is a junior developer with infinite typing speed but zero architectural intuition. You must dictate the architecture, the workflow, and the boundaries. If you let the agent drive, it will write spaghetti code.
@@ -27,28 +30,61 @@ If you are a senior engineer but a beginner to AI agents, your instincts might b
 3. **Trust, but Verify:** Agents will confidently hallucinate nonexistent APIs or subtly break logic. Never blindly merge agent-written code. Always require the agent to write tests, or manually run your build/test suite after it finishes a task.
 4. **Leverage Its Tools:** The agent is not just a text generator. It has access to your terminal. Instead of pasting code into the chat, tell the agent: *"Use `grep` to find where the `User` class is defined and explain its dependencies."* Let it do the legwork.
 
+### 🧠 Core Philosophy: Agents Are Always Guessing
+When you interact with a coding agent, remember one fundamental truth: **The agent is always guessing.** It lacks the years of context, the implicit team knowledge, and the whiteboard architecture sessions that you have experienced. Every decision it makes is a statistical guess based on the limited text in its immediate context window. 
+
+Therefore, it is your job as the pilot to provide the necessary background, enforce strict guardrails, and minimize the amount of guessing the agent has to do. If you give an agent a massive, vague prompt without a structured workflow, it will guess your architecture and likely get it wrong. The key to success is forcing the agent into structured, step-by-step workflows.
+
+### 🧠 Directives vs. Inquiries
+A common beginner mistake is asking a question and getting frustrated when the agent unexpectedly modifies code to "fix" it. To master an agent, you must understand the difference between asking a question and giving an order:
+*   **Inquiries:** Requests for analysis, explanation, or opinion (e.g., *"Why is this function crashing?"* or *"What do you think of this architecture?"*). An agent should *only* respond with text.
+*   **Directives:** Unambiguous orders to execute a task (e.g., *"Fix the crash in this function,"* or *"Implement the architecture we just discussed."*).
+*   **The Habit:** If your agent constantly jumps the gun, update your `user_level.AGENTS.md` (as shown in our template) to explicitly enforce this boundary, telling it to wait for a Directive before taking action.
+
+</details>
+
+---
+
+## General Tips for Beginners
+
+<details>
+<summary><strong>General Tips & Best Practices</strong></summary>
+
+*   **Adopt the "Pair Programmer" Mindset:** Treat the agent as a fast-typing junior developer. You remain the Senior Code Reviewer.
+*   **The "Explain It Back" Rule:** Never accept code you cannot understand. Ask the agent to explain complex functions line-by-line before integrating them.
+*   **Avoid "Vibe Coding":** Don't blindly accept code just because it looks correct at a glance. Always verify and run tests to catch subtle logic errors or API hallucinations.
+*   **Provide Examples (Few-Shot Prompting):** Agents perform significantly better when given a template or an existing code snippet to match your project's established style.
+*   **Model Selection:** Whenever possible, prefer using larger, more capable models for complex tasks. They save time and reduce "churn" because they are smarter and make fewer mistakes.
+*   **Permissions & Safe Commands:** Configure tools to permanently allow safe, read-only commands (like `git status`, `ls`, `grep`) to speed up the agent's research phase so it doesn't have to pause and ask for permission constantly.
+
+</details>
+
 ---
 
 ## The Concept of "Context"
 
 To get the most out of your coding agent, you must understand how it perceives the world through **Context**. There are two distinct types of context you need to manage: **Working Context** (the agent's short-term memory during a session) and **Starting Context** (your configuration files).
 
-### 1. Working Context (Session Memory)
+<details>
+<summary><strong>1. Working Context (Session Memory)</strong></summary>
 
 The "Working Context" is the temporary memory the agent builds dynamically as you chat with it. Every file it reads, every command output it sees, and every message you type fills up its "context window."
 
 **The Crucial Limitation:** 
-The agent has a finite amount of context it can hold. As this window fills up, the agent becomes slower, more expensive to run, and most importantly, **it loses performance and "forgets" earlier details**. The model performs at its absolute best when it only holds the strictly relevant content.
+The agent has a finite amount of context it can hold. As this window fills up, the agent becomes slower, more expensive to run, and most importantly, **it loses performance and "forgets" earlier details**. The model performs at its absolute best when it only holds the strictly relevant content in its context window.
 
 #### Managing Your Working Context
 
-To mitigate this limitation and maintain high performance, you must proactively manage your session:
-*   **Compressing (`/compress`):** This command (available in many CLIs, including Gemini) tells the agent to summarize the older parts of the conversation, dropping massive file reads or lengthy command outputs, while keeping the high-level state of what you are working on. Use this after a long, messy debugging session.
-*   **Clearing (`/clear`):** This command completely wipes the session history, effectively giving the agent amnesia. Use this when you have successfully finished a task, made a commit, and are switching to an entirely new feature.
+To mitigate this limitation and maintain high performance, you must proactively manage your session context:
+*   **Compressing/Compacting (`/compress` or `/compact`):** This command (available in many CLIs, including Gemini) tells the agent to summarize the older parts of the conversation, dropping massive file reads or lengthy command outputs, while keeping the high-level state of what you are working on. Use this after a long, messy debugging session where the agent read dozens of files or printed massive stack traces.
+*   **Clearing (`/clear`):** This command completely wipes the session history, effectively giving the agent amnesia about everything you've done so far. Use this when you have successfully finished a task, made a commit, and are switching to an entirely new feature.
 
-*Note: The exact commands and behavior vary by agent. Some tools (like GitHub Copilot/Codex) perform extremely efficient automatic compaction in the background. Tools with massive context windows (like Gemini) currently require more manual intervention from the user to purge unnecessary clutter.*
+*Note: The exact commands and behavior vary by agent. Some tools (like GitHub Copilot/Codex) perform extremely efficient automatic compaction in the background. Tools with massive context windows (like Gemini) currently require more manual intervention from the user to purge unnecessary clutter and keep performance sharp.*
 
-### 2. Starting Context (Context Files)
+</details>
+
+<details>
+<summary><strong>2. Starting Context (Context Files)</strong></summary>
 
 If you have to clear your session frequently to maintain performance, how do you prevent the agent from forgetting how your project works every time you run `/clear`? The answer is **Starting Context**. 
 
@@ -83,45 +119,25 @@ The workspace context is defined where you run your agent (usually the root dire
     *   **Living Document:** Like the user context, this is a living document. Update it as your project architecture, dependencies, or conventions change over time.
     *   **Version Control:** Unless an `AGENTS.md` file is highly customized for a specific one-off task or personal to a single developer's machine environment, you should **commit it to the repository**. This allows all developers (and their agents) on the team to benefit from the shared agent context.
 
-### 2. Managing Your Working Context (Session Memory)
-
-The "Working Context" is the temporary memory the agent builds dynamically as you chat with it. Every file it reads, every command output it sees, and every message you type fills up its "context window."
-
-**The Crucial Limitation:** 
-The agent has a finite amount of context it can hold. As this window fills up, the agent becomes slower, more expensive to run, and most importantly, **it loses performance and "forgets" earlier details**. The model performs at its absolute best when it only holds the strictly relevant content in its context window.
-
-To maintain high performance, you must proactively manage the working context:
-*   **Compacting (`/compact`):** This command (available in many CLIs, including Gemini) tells the agent to summarize the older parts of the conversation, dropping massive file reads or lengthy command outputs, while keeping the high-level state of what you are working on. Use this after a long, messy debugging session where the agent read dozens of files or printed massive stack traces.
-*   **Clearing (`/clear`):** This command completely wipes the session history, effectively giving the agent amnesia about everything you've done so far. Use this when you have successfully finished a task, made a commit, and are switching to an entirely new feature.
-
-*Note: The exact commands and behavior vary by agent. Some tools (like GitHub Copilot/Codex) perform extremely efficient automatic compaction in the background. Tools with massive context windows (like Gemini) currently require more manual intervention from the user to purge unnecessary clutter and keep performance sharp.*
-
-### General Tips
-*   **Model Selection:** Whenever possible, prefer using larger, more capable models. They save time and reduce "churn" because they are smarter and make fewer mistakes.
-*   **Permissions:** You can often set up settings to permanently allow some trusted, non-destructive commands (like `git status`, `ls`, `grep`, `cat`) so the agent doesn't have to pause and ask for permission constantly.
+</details>
 
 ---
 
 ## Day-to-Day Workflows for Beginners
 
-### 🧠 Core Philosophy: Agents Are Always Guessing
-When you interact with a coding agent, remember one fundamental truth: **The agent is always guessing.** It lacks the years of context, the implicit team knowledge, and the whiteboard architecture sessions that you have experienced. Every decision it makes is a statistical guess based on the limited text in its immediate context window. 
+<details>
+<summary><strong>1. Starting a New Feature (The Planning Phase)</strong></summary>
 
-Therefore, it is your job as the pilot to provide the necessary background, enforce strict guardrails, and minimize the amount of guessing the agent has to do. If you give an agent a massive, vague prompt without a structured workflow, it will guess your architecture and likely get it wrong. The key to success is forcing the agent into structured, step-by-step workflows.
-
-### 🧠 Directives vs. Inquiries
-A common beginner mistake is asking a question and getting frustrated when the agent unexpectedly modifies code to "fix" it. To master an agent, you must understand the difference between asking a question and giving an order:
-*   **Inquiries:** Requests for analysis, explanation, or opinion (e.g., *"Why is this function crashing?"* or *"What do you think of this architecture?"*). An agent should *only* respond with text.
-*   **Directives:** Unambiguous orders to execute a task (e.g., *"Fix the crash in this function,"* or *"Implement the architecture we just discussed."*).
-*   **The Habit:** If your agent constantly jumps the gun, update your `user_level.AGENTS.md` (as shown in our template) to explicitly enforce this boundary, telling it to wait for a Directive before taking action.
-
-### 1. Starting a New Feature (The Planning Phase)
 Never ask an agent to "build a new obstacle avoidance node" and immediately let it write code. It will guess your architecture and likely get it wrong. 
 *   **The Workflow:** Force the agent to act as a System Architect first. Ask it to read the codebase, find where similar features live, and write a Markdown design document detailing the files it plans to create and the functions it will write.
 *   **The Prompt:** 
     *   Use our **[`plan_new_feature.md`](./prompts/plan_new_feature.md)** power prompt. Do not let the agent write code until you approve the plan.
 
-### 2. The Iterative Build Loop (The Execution Phase)
+</details>
+
+<details>
+<summary><strong>2. The Iterative Build Loop (The Execution Phase)</strong></summary>
+
 Once a feature is planned, do not ask the agent to implement the entire design document in one go. The context window will overflow, and mistakes will compound.
 *   **The Workflow:** Break the plan down. Ask the agent to implement *one* specific file or component at a time.
 *   **The Loop:** 
@@ -131,31 +147,44 @@ Once a feature is planned, do not ask the agent to implement the entire design d
     4. Once tests pass, explicitly instruct the agent: *"Great, make a surgical commit for Component A."*
     5. Move on to Component B.
 
-### 3. Debugging (The Investigation Phase)
+</details>
+
+<details>
+<summary><strong>3. Debugging (The Investigation Phase)</strong></summary>
+
 When an agent sees a stack trace, its instinct is to immediately write a code fix based on a guess. This often breaks things further.
 *   **The Workflow:** Force the agent to be a detective. Tell it to read the stack trace, use `grep` to find the relevant files, and explain the execution path to you in plain English. Forbid it from writing a fix until it proves the bug by writing a failing test script.
 *   **The Prompt:** 
     *   Use our **[`deep_bug_investigation.md`](./prompts/deep_bug_investigation.md)** power prompt to enforce this behavior.
 
-### 4. Codebase Onboarding (The "Tour Guide" Workflow)
+</details>
+
+<details>
+<summary><strong>4. Codebase Onboarding (The "Tour Guide" Workflow)</strong></summary>
+
 Agents are not just for writing code; they are incredible tools for rapidly onboarding yourself onto a massive, unfamiliar codebase. Instead of spending hours tracing function calls manually, you can ask the agent to act as a senior developer giving you a tour.
 *   **The Workflow:** Forbid the agent from modifying code, and ask it to trace a specific data flow or explain a complex module step-by-step.
 *   **The Prompts:** 
     *   **For a deep dive:** Use our **[`codebase_tour_guide.md`](./prompts/codebase_tour_guide.md)** power prompt. 
     *   **For a quick inline question:** Use something like: *"I am new to this codebase. Please read the `src/navigation/` directory and explain to me step-by-step how the sensor telemetry data is ingested and filtered in the state estimator. Do not write or modify any code."*
 
-### 5. Targeted Refactoring
+</details>
+
+<details>
+<summary><strong>5. Targeted Refactoring</strong></summary>
+
 If you give an agent a vague prompt like *"Clean up this file and make it better,"* it will likely rewrite the entire file, change your formatting, and potentially break subtle edge cases. 
 *   **The Workflow:** Give specific, architectural directives rather than vague cleanup requests.
 *   **The Prompts:** 
     *   *"Please extract all the direct database queries in `user.py` into a separate `user_repository.py` file."*
     *   *"Convert this C++ class to use smart pointers (`std::shared_ptr` and `std::unique_ptr`) instead of raw pointers to prevent memory leaks."*
 
-### 6. Code Review & GitHub Integration
-If you have the GitHub CLI (`gh`) installed and authenticated, your agent can act as a fully automated code reviewer and PR author.
+</details>
 
 <details>
-<summary><strong>Snippet: Draft a Pull Request</strong></summary>
+<summary><strong>6. Code Review & GitHub Integration</strong></summary>
+
+If you have the GitHub CLI (`gh`) installed and authenticated, your agent can act as a fully automated code reviewer and PR author.
 
 *Use this prompt when you have finished your local feature branch and are ready to open a PR. The agent will read your diff and use the GitHub CLI to create the PR.*
 
@@ -164,10 +193,6 @@ Please read my uncommitted changes and my recent git history for this branch.
 Draft a comprehensive Pull Request title and description explaining the "why" and "what" of these changes. 
 Once I approve the text, use the `gh pr create` command to open the pull request.
 ```
-</details>
-
-<details>
-<summary><strong>Snippet: Review an Open PR</strong></summary>
 
 *Use this prompt to have the agent read a teammate's PR and leave inline comments.*
 
