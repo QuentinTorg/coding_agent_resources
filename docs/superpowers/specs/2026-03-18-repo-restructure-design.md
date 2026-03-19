@@ -16,6 +16,7 @@ Before writing any documentation, the assigned agents **must** perform empirical
     *   `python_general_best_practices.AGENTS.md`
     *   `react_best_practices.AGENTS.md`
 *   **Keep Core Context:** Ensure `user_level.AGENTS.md` and `workspace_level.AGENTS.md` remain as the primary examples of lean, human-curated context files.
+*   **Skill Format Migration:** Migrate all existing skills that are currently single files (e.g., `bug-detective.skill`) into the standard directory format (`bug-detective/SKILL.md`). Remove the old standalone `.skill` files to ensure consistency across the repository.
 
 ## Phase 3: README Restructuring
 The `README.md` will be rewritten to flow logically for a beginner, emphasizing rapid onboarding.
@@ -45,8 +46,9 @@ The `README.md` will be rewritten to flow logically for a beginner, emphasizing 
 
 ## Phase 4: Create the GitHub Workflow Skill
 Create a new, comprehensive skill to replace the old PR review prompts.
-*   **Name:** `github-workflow.skill`
+*   **Format:** The skill must be created using the directory format: `skills/github-workflow/SKILL.md`.
 *   **Capabilities:**
+    *   **Setup Guidance:** Automatically check if the user is authenticated with the GitHub CLI (`gh auth status`) and guide them through setup if they are not.
     *   Read issues to understand tasks.
     *   Draft comprehensive PR descriptions.
     *   Check CI status.
