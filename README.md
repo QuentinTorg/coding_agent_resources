@@ -18,12 +18,13 @@ You can use agents to:
 
 ## Core Fundamentals & Best Practices
 
-If you are a seasoned engineer but a beginner to AI agents, your instincts might betray you. You cannot interact with an agent the same way you interact with another senior engineer or a simple Google search. Working effectively requires a shift in how you communicate, review code, and set boundaries. 
+If you are a seasoned engineer but a beginner to AI agents, your instincts might betray you. You cannot interact with an agent the same way you interact with another seasoned engineer or a simple Google search. Working effectively requires a shift in how you communicate, review code, and set boundaries.
 
 <details>
 <summary><strong>1. The Mindset (Philosophy)</strong></summary>
 
-*   **You are the Pilot (The "Eager Intern" Model):** Do not grant the agent the autonomy of a senior engineer. Treat it like an extremely eager, fast-typing intern. It is highly capable of writing code, but it does not see the big picture and lacks architectural intuition. If left to its own devices without strict direction, it will write a massive amount of code that might "work" but will be an unsustainable, unmaintainable mess. You must dictate the architecture, the workflow, and the boundaries.
+*   **You are the Pilot:** Do not grant the agent the autonomy of a senior engineer. Treat it like an extremely eager, fast-typing intern. It is highly capable of writing code, but it does not see the big picture and lacks architectural intuition. If left to its own devices without strict direction, it will write a massive amount of code that might "work" but will be an unsustainable, unmaintainable mess. You must dictate the architecture, the workflow, and the boundaries.
+    * Keep in mind though, agents are extremely capable in any domain if you can keep the task narrow. If prompted to help make an archetecture decision, it will still be able to provide constructive feedback that you can use to generate an implementation plan
 *   **Trust, but Verify (Avoid "Vibe Coding"):** Agents will confidently hallucinate nonexistent APIs or subtly break logic. Don't blindly accept code just because it looks correct at a glance. Always require the agent to write tests, or manually run your build/test suite after it finishes a task.
 *   **Agents Are Always Guessing:** The agent lacks the implicit team knowledge and years of context you have. Every decision is a statistical guess based on its immediate context window. It is your job to minimize the guessing by providing necessary background, enforcing strict guardrails, and forcing structured workflows.
 </details>
