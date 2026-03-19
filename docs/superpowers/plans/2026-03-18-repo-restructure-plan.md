@@ -15,8 +15,8 @@
 **Files:** None modified directly.
 
 - [ ] **Step 1: Read the background context**
-Run: `cat ideas.md`
-Expected: You read the contents and understand the original user intent.
+Run: Use your native file reading tool to inspect `ideas.md`.
+Expected: You read the contents and understand the original user intent. Write a 1-sentence summary of your understanding to the chat.
 
 - [ ] **Step 2: External verification of Gemini settings**
 Search the internet or utilize your built-in knowledge to verify the current file locations for Gemini config (e.g. `~/.gemini/config.json`) and the latest best practices for context management.
@@ -33,7 +33,7 @@ Expected: You have confirmed the exact mechanics so you can document them accura
 - Modify: Any files containing "GitHub Copilot"
 
 - [ ] **Step 1: Identify context files to remove**
-Run: `ls context_files/`
+Run: Use your native directory listing tool to view `context_files/`.
 Expected: Lists the files to be removed.
 
 - [ ] **Step 2: Remove outdated context files**
@@ -41,12 +41,12 @@ Run: `git rm context_files/cpp_best_practices.AGENTS.md context_files/python_fas
 Expected: Only `user_level.AGENTS.md` and `workspace_level.AGENTS.md` remain.
 
 - [ ] **Step 3: Search for "Copilot" references**
-Run: `grep -r -i "copilot" . --exclude-dir=.git --exclude-dir=.gemini`
+Run: Use your native grep search tool to find references to "copilot" in the repository, excluding `.git` and `.gemini`.
 Expected: Identifies any files containing references to Copilot.
 
 - [ ] **Step 4: Scrub Copilot references from all files**
 Use your file editing tools to remove all references found in Step 3.
-Expected: Re-running the grep from Step 3 yields no results.
+Expected: Re-running the search from Step 3 yields no results.
 
 - [ ] **Step 5: Commit**
 Run: `git commit -am "chore: remove outdated context files and scrub Copilot references"`
@@ -88,19 +88,23 @@ Expected: The file is updated with the first two sections.
 Append the "Getting Started" section (detailing settings, user vs workspace, trusting directories, command policies) and the "General Tips for Beginners" section (including the "Pink Elephant" problem). Use `<details><summary>` blocks with brief intros outside of them.
 Expected: The file contains the new sections.
 
-- [ ] **Step 3: Draft Skills, Subagents, and Workflows**
+- [ ] **Step 3: Draft "The Concept of Context"**
+Append the section explaining the working vs. starting context, keeping the current explanation of why minimal, human-curated context files are better.
+Expected: The file contains the Context section.
+
+- [ ] **Step 4: Draft Skills, Subagents, and Workflows**
 Append the expanded Skills section, the new Subagents section, and the updated Day-to-Day Workflows section.
 Expected: The file contains the final instructional sections.
 
-- [ ] **Step 4: Update the Resource Index**
-Append the updated Resource Index to reflect the deleted context files and updated skill formats.
+- [ ] **Step 5: Update the Resource Index**
+Append the updated Resource Index to reflect the deleted context files and updated skill formats. (This matches the original structure of the README, simply updating the links).
 Expected: The README rewrite is complete.
 
-- [ ] **Step 5: Verify formatting and links**
+- [ ] **Step 6: Verify formatting and links**
 Inspect the written `README.md` to ensure `<details>` tags are closed and paths in the Resource Index match the repository state.
 Expected: All links and formatting are valid.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 Run: `git add README.md && git commit -m "docs: restructure README and update best practices"`
 Expected: Success
 
@@ -123,7 +127,7 @@ Write the skill file containing the YAML frontmatter (name: `github-workflow`) a
 Save this to `skills/github-workflow/SKILL.md`.
 
 - [ ] **Step 3: Verify the skill file**
-Run: `cat skills/github-workflow/SKILL.md`
+Run: Use your native file reading tool to inspect `skills/github-workflow/SKILL.md`.
 Expected: The file contains all required capabilities and formatting.
 
 - [ ] **Step 4: Commit**
