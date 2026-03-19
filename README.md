@@ -46,6 +46,101 @@ To get the most out of your agent, you need to configure it correctly for your e
 *   **Recommended Settings:** We recommend starting with strict command policies and a robust `.geminiignore` (or equivalent) to hide compiled assets, dependency folders (`node_modules/`, `venv/`), and sensitive credentials (`.env`, `.ssh/`).
 </details>
 
+Opinionated setup recommendations are below if you are interested.
+
+<details>
+<summary><strong>Gemini Setup</strong></summary>
+
+### Installation
+Installation information and prerequisites can be found in the [official Gemini CLI documentation](https://geminicli.com/docs/get-started/installation/).
+
+### Tool Conservatism
+By default, Gemini is quite conservative with its tool use to protect your system. It will ask for permission before running most bash tools or modifying files. You can even force it into a strict read-only mode by default if you desire. It generally only executes its own internal codebase exploration tools without asking. Below, we'll configure settings to allow permanent approval for safe tools so you aren't constantly interrupted.
+
+### Opinionated Settings
+We highly recommend reviewing the [official Gemini Settings Documentation](https://geminicli.com/docs/cli/settings/) to see all available customizations. You can modify these settings globally at `~/.gemini/settings.json` or locally per-project at `your-project/.gemini/settings.json`.
+
+Below are opinionated snippets from a recommended `settings.json` file. Each section is described independently. *(Note: The `...` indicates that other settings may exist in these blocks).*
+
+#### Security
+```json
+{
+  "security": {
+    "enablePermanentToolApproval": true,
+    ...
+  }
+}
+```
+*   `enablePermanentToolApproval`: Set this to `true` if you want the ability to permanently allow safe, read-only tools (like `grep`, `ls`, `find`) when prompted to "approve" them in the CLI.
+
+#### General & Model Routing
+```json
+{
+  "general": {
+    "plan": {
+      "modelRouting": false
+    },
+    ...
+  }
+}
+```
+*   `modelRouting`: Turn this `false` if you don't want the agent to automatically fall back from a larger Pro model to a smaller Flash model when it exits Plan Mode. If left true, you may experience bugs where the agent jumps to a significantly less capable model and struggles to complete complex tasks.
+
+#### UI
+```json
+{
+  "ui": {
+    "footer": {
+      "hideContextPercentage": false
+    },
+    "showMemoryUsage": true,
+    "showModelInfoInChat": true,
+    ...
+  }
+}
+```
+*   `hideContextPercentage`: Set to `false` to permanently show how much of your current context window you are using in the footer. It is critical to keep a close eye on this to maintain agent performance.
+*   `showModelInfoInChat`: Set to `true` to show exactly which model is being used for every single turn in the chat. This is crucial for verifying that the agent hasn't quietly downgraded to a smaller model.
+
+#### Model Selection
+```json
+{
+  "model": {
+    "name": "gemini-X.Y-pro-preview"
+  }
+}
+```
+*   `name`: Lock your model to always use the latest "Pro" (or "Pro Preview") model. While you can switch to "automatic" or a "Flash" model to save tokens during small tasks, the Pro models are significantly better at debugging and making complex architectural changes.
+
+#### Experimental Features
+```json
+{
+  "experimental": {
+    "plan": true,
+    "modelSteering": true,
+    ...
+  }
+}
+```
+*   `plan`: Set to `true` to allow read-only plan mode. This lets you bounce ideas off the AI and generate a plan *before* it jumps into building. It will explore your code and give feedback based on your ideas.
+*   `modelSteering`: Set to `true` to enable injecting commands while the agent is in a chain of thought. If you see the agent start heading down the wrong path, you don't have to kill the process; you can simply type a comment to nudge it ("Look out for this pitfall", or "I prefer to use this build command").
+
+### The Superpowers Extension
+If you want to immediately supercharge Gemini's methodical workflows, you can install the Superpowers extension. However, **we recommend starting without it for your first few projects** so you understand how the vanilla agent behaves before manipulating it.
+```bash
+gemini extensions install https://github.com/obra/superpowers
+```
+
+### Context Files
+**Do not** create a user-level `~/.gemini/GEMINI.md` file immediately. Wait until you have a solid understanding of how the model behaves and know exactly what you want to change globally.
+
+### Sandbox Mode (Docker)
+It's possible to start Gemini in an isolated Sandbox mode by passing the `--sandbox` flag (`gemini --sandbox`). This runs the agent inside a Docker container. 
+
+The downside is the container will not have your local system tools installed, forcing the agent to start fresh. The upside is you can specify exactly which Docker container it enters, meaning if you have a predefined Docker build environment, Gemini can work safely inside it without touching your host machine. For full details on passing Docker arguments and configuring environments, see the [Gemini Sandbox Documentation](https://geminicli.com/docs/cli/sandbox/).
+
+</details>
+
 ---
 
 ## General Tips for Beginners
