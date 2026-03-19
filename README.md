@@ -1,6 +1,6 @@
 # Coding Agent Resources
 
-The goal of this repository is to provide a getting started guide and background information to help you quickly become proficient with AI coding agents (like Gemini CLI, Claude Code, GitHub Copilot/Codex).
+The goal of this repository is to provide a getting started guide and background information to help you quickly become proficient with AI coding agents. The defined "Big Three" are Gemini CLI, Claude Code, and Codex.
 
 It acts as both an onboarding guide and a resource library containing templates, prompts, and best practices. These resources are designed to help you safely integrate an agent into your development workflow and immediately turn it into a productive, highly capable member of your engineering team.
 
@@ -78,7 +78,7 @@ Once the context inevitably starts to fill up, you have two primary commands to 
 *   **Compressing/Compacting (`/compress` or `/compact`):** This command (available in many CLIs, including Gemini) tells the agent to summarize the older parts of the conversation, dropping massive file reads or lengthy command outputs, while keeping the high-level state of what you are working on. Use this after a long, messy debugging session where the agent read dozens of files or printed massive stack traces.
 *   **Clearing (`/clear`):** This command completely wipes the session history, effectively giving the agent amnesia about everything you've done so far. Use this when you have successfully finished a task, made a commit, and are switching to an entirely new feature.
 
-*Note: The exact commands and behavior vary by agent. Some tools (like GitHub Copilot/Codex) perform extremely efficient automatic compaction in the background. Tools with massive context windows (like Gemini) currently require more manual intervention from the user to purge unnecessary clutter and keep performance sharp.*
+*Note: The exact commands and behavior vary by agent. The defined "Big Three" are Gemini CLI, Claude Code, and Codex. Some tools (like Codex) perform extremely efficient automatic compaction in the background, whereas tools with massive context windows (like Gemini) currently require more manual intervention from the user to purge unnecessary clutter and keep performance sharp.*
 
 </details>
 
@@ -302,10 +302,10 @@ build/
 </details>
 
 <details>
-<summary><strong>Codex / Copilot</strong></summary>
+<summary><strong>Codex</strong></summary>
 
-### Codex / Copilot Settings
-*(Details and snippets for configuring Codex and Copilot will be added here)*
+### Codex Settings
+*(Details and snippets for configuring Codex will be added here. The defined "Big Three" are Gemini CLI, Claude Code, and Codex.)*
 
 </details>
 
