@@ -18,12 +18,12 @@ You can use agents to:
 
 ## Core Fundamentals & Best Practices
 
-If you are a senior engineer but a beginner to AI agents, your instincts might betray you. You cannot interact with an agent the same way you interact with a human colleague or a simple Google search. Working effectively requires a shift in how you communicate and review code.
+If you are a seasoned engineer but a beginner to AI agents, your instincts might betray you. You cannot interact with an agent the same way you interact with another senior engineer or a simple Google search. Working effectively requires a shift in how you communicate, review code, and set boundaries. 
 
 <details>
 <summary><strong>1. The Mindset (Philosophy)</strong></summary>
 
-*   **You are the Pilot:** Treat the agent as a fast-typing junior developer. You remain the Senior Code Reviewer. It has infinite typing speed but zero architectural intuition. You must dictate the architecture, the workflow, and the boundaries. If you let the agent drive, it will write spaghetti code.
+*   **You are the Pilot (The "Eager Intern" Model):** Do not grant the agent the autonomy of a senior engineer. Treat it like an extremely eager, fast-typing intern. It is highly capable of writing code, but it does not see the big picture and lacks architectural intuition. If left to its own devices without strict direction, it will write a massive amount of code that might "work" but will be an unsustainable, unmaintainable mess. You must dictate the architecture, the workflow, and the boundaries.
 *   **Trust, but Verify (Avoid "Vibe Coding"):** Agents will confidently hallucinate nonexistent APIs or subtly break logic. Don't blindly accept code just because it looks correct at a glance. Always require the agent to write tests, or manually run your build/test suite after it finishes a task.
 *   **Agents Are Always Guessing:** The agent lacks the implicit team knowledge and years of context you have. Every decision is a statistical guess based on its immediate context window. It is your job to minimize the guessing by providing necessary background, enforcing strict guardrails, and forcing structured workflows.
 </details>
