@@ -1,5 +1,12 @@
 # Coding Agent Resources
 
+- [Introduction: What is an AI Coding Agent?](#introduction-what-is-an-ai-coding-agent)
+- [Core Fundamentals & Best Practices](#core-fundamentals--best-practices)
+- [Getting Started & Settings](#getting-started--settings)
+- [The Concept of "Context"](#the-concept-of-context)
+- [Skills, Subagents, and Workflows](#skills-subagents-and-workflows)
+- [Resource Index](#resource-index)
+
 The goal of this repository is to provide a quick reference and onboarding guide to help you quickly become proficient with AI coding agents.
 
 ## Introduction: What is an AI Coding Agent?
