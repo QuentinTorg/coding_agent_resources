@@ -135,7 +135,7 @@ gemini extensions install https://github.com/obra/superpowers
 **Do not** create a user-level `~/.gemini/GEMINI.md` file immediately. Wait until you have a solid understanding of how the model behaves and know exactly what you want to change globally.
 
 ### Sandbox Mode (Docker)
-It's possible to start Gemini in an isolated Sandbox mode by passing the `--sandbox` flag (`gemini --sandbox`). This runs the agent inside a Docker container. 
+If you are concerned about the security of running an agent on your system, it's possible to start Gemini in an isolated Sandbox mode by passing the `--sandbox` flag (`gemini --sandbox`). This runs the agent inside a Docker container (or some other sandbox environment of your choosing).
 
 The downside is the container will not have your local system tools installed, forcing the agent to start fresh. The upside is you can specify exactly which Docker container it enters, meaning if you have a predefined Docker build environment, Gemini can work safely inside it without touching your host machine. For full details on passing Docker arguments and configuring environments, see the [Gemini Sandbox Documentation](https://geminicli.com/docs/cli/sandbox/).
 
