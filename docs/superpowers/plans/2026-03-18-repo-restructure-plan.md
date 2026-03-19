@@ -16,7 +16,7 @@
 
 - [ ] **Step 1: Read the background context**
 Run: Use your native file reading tool to inspect `ideas.md`.
-Expected: You read the contents and understand the original user intent. Write a 1-sentence summary of your understanding to the chat.
+Expected: You read the contents and understand the original user intent.
 
 - [ ] **Step 2: External verification of Gemini settings**
 Search the internet or utilize your built-in knowledge to verify the current file locations for Gemini config (e.g. `~/.gemini/config.json`) and the latest best practices for context management.
@@ -44,12 +44,12 @@ Expected: Only `user_level.AGENTS.md` and `workspace_level.AGENTS.md` remain.
 Run: Use your native grep search tool to find references to "copilot" in the repository, excluding `.git` and `.gemini`.
 Expected: Identifies any files containing references to Copilot.
 
-- [ ] **Step 4: Scrub Copilot references from all files**
-Use your file editing tools to remove all references found in Step 3.
+- [ ] **Step 4: Update Copilot references from all files**
+Use your file editing tools to rewrite sentences containing references found in Step 3. Do not just scrub the word; rewrite the sentences to establish that "The defined 'Big Three' are Gemini CLI, Claude Code, and Codex."
 Expected: Re-running the search from Step 3 yields no results.
 
 - [ ] **Step 5: Commit**
-Run: `git commit -am "chore: remove outdated context files and scrub Copilot references"`
+Run: `git commit -am "chore: remove outdated context files and update Copilot references"`
 Expected: Success
 
 ### Task 3: Skill Format Migration
@@ -81,11 +81,11 @@ Expected: Success
 - Modify: `README.md`
 
 - [ ] **Step 1: Draft Introduction & Core Fundamentals**
-Use your file writing tools to replace the content of `README.md` up to the Core Fundamentals section, strictly adhering to the design spec.
+Use your file writing tools to replace the content of `README.md` up to the Core Fundamentals section. Explicitly state the repo is for quick reference/onboarding. Define AI agents, focusing on Gemini CLI, while acknowledging Claude Code and Codex (noting cross-compatibility like `AGENTS.md`).
 Expected: The file is updated with the first two sections.
 
 - [ ] **Step 2: Draft Getting Started & Tips**
-Append the "Getting Started" section (detailing settings, user vs workspace, trusting directories, command policies) and the "General Tips for Beginners" section (including the "Pink Elephant" problem). Use `<details><summary>` blocks with brief intros outside of them.
+Append the "Getting Started" section (detailing settings, user vs workspace settings overriding, trusting directories, command policies, recommended settings) and the "General Tips for Beginners" section (including the "Pink Elephant" problem: speak in the affirmative). Use `<details><summary>` blocks with brief intros outside of them.
 Expected: The file contains the new sections.
 
 - [ ] **Step 3: Draft "The Concept of Context"**
@@ -93,7 +93,7 @@ Append the section explaining the working vs. starting context, keeping the curr
 Expected: The file contains the Context section.
 
 - [ ] **Step 4: Draft Skills, Subagents, and Workflows**
-Append the expanded Skills section, the new Subagents section, and the updated Day-to-Day Workflows section.
+Append the expanded Skills section (what they are, user vs workspace scoping, dynamic loading). Add an "Ideas for Custom Skills" list (e.g., repo setup, PR workflows) and a "Recommended Skills List" highlighting `superpowers`. Append the new Subagents section (what they are, how to trigger). Append the updated Day-to-Day Workflows section (using skills/subagents).
 Expected: The file contains the final instructional sections.
 
 - [ ] **Step 5: Update the Resource Index**
