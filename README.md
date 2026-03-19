@@ -1,5 +1,9 @@
 # Coding Agent Resources
 
+The goal of this repository is to provide a quick reference and onboarding guide to help you quickly become proficient with AI coding agents.
+
+---
+
 - [Introduction: What is an AI Coding Agent?](#introduction-what-is-an-ai-coding-agent)
 - [Core Fundamentals & Best Practices](#core-fundamentals--best-practices)
 - [Getting Started & Settings](#getting-started--settings)
@@ -14,7 +18,7 @@
   - [Example Prompts](#example-prompts)
   - [Example Skills](#example-skills)
 
-The goal of this repository is to provide a quick reference and onboarding guide to help you quickly become proficient with AI coding agents.
+---
 
 ## Introduction: What is an AI Coding Agent?
 
@@ -320,7 +324,6 @@ Below is an index of the resources available in this repository. These are sampl
 
 These skills can be found in the `skills/` directory. Each skill contains a `SKILL.md` file defining its behavior.
 **WARNING:** These skills are untested so far and still under development. **TODO:** Test and refine the skills. Remove skills that are not actually helpful or recommended
-
 
 *   **[Bug Detective](./skills/bug-detective/)**
 *   **[Codebase Tour](./skills/codebase-tour/)**
