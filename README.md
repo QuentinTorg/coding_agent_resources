@@ -4,8 +4,15 @@
 - [Core Fundamentals & Best Practices](#core-fundamentals--best-practices)
 - [Getting Started & Settings](#getting-started--settings)
 - [The Concept of "Context"](#the-concept-of-context)
+  - [Working Context](#working-context)
+  - [Starting Context](#starting-context)
 - [Skills, Subagents, and Workflows](#skills-subagents-and-workflows)
+  - [Skills](#skills)
+  - [Subagents](#subagents)
 - [Resource Index](#resource-index)
+  - [Example Agent Contexts](#example-agent-contexts)
+  - [Example Prompts](#example-prompts)
+  - [Example Skills](#example-skills)
 
 The goal of this repository is to provide a quick reference and onboarding guide to help you quickly become proficient with AI coding agents.
 
@@ -170,7 +177,7 @@ The downside is the container will not have your local system tools installed, f
 To get the most out of your coding agent, you must understand how it perceives the world through **Context**. Setting up and managing context effectively is a critical skill for maintaining an agent's performance and accuracy. There are two distinct types of context you need to manage: **Working Context** (the agent's short-term memory during a session) and **Starting Context** (your configuration files).
 
 <details>
-<summary><strong>1. Working Context (Session Memory)</strong></summary>
+<summary><strong><a id="working-context"></a>1. Working Context (Session Memory)</strong></summary>
 
 The "Working Context" is the temporary memory the agent builds dynamically as you chat with it. Every file it reads, every command output it sees, and every message you type fills up its "context window."
 
@@ -194,7 +201,7 @@ Once the context inevitably starts to fill up, you have two primary commands to 
 </details>
 
 <details>
-<summary><strong>2. Starting Context (Context Files)</strong></summary>
+<summary><strong><a id="starting-context"></a>2. Starting Context (Context Files)</strong></summary>
 
 If you have to clear your session frequently to maintain performance, how do you prevent the agent from forgetting how your project works every time? The answer is **Starting Context**.
 
@@ -239,7 +246,7 @@ Located in the root directory of your repository, this tells the agent how to op
 To elevate your agent's capabilities beyond simple prompt-and-response, you should leverage Skills and Subagents. These tools enable complex, multi-step workflows with high reliability.
 
 <details>
-<summary><strong>Skills</strong></summary>
+<summary><strong><a id="skills"></a>Skills</strong></summary>
 
 ### What are Skills?
 Skills are modular, self-contained packages that extend an agent's capabilities by providing specialized knowledge, strict procedural workflows, and bundled resources. They transform the agent from a general-purpose AI into an expert with procedural memory for a specific task.
@@ -263,7 +270,7 @@ We highly recommend exploring the `superpowers` extension for Gemini CLI, which 
 </details>
 
 <details>
-<summary><strong>Subagents</strong></summary>
+<summary><strong><a id="subagents"></a>Subagents</strong></summary>
 
 ### What are Subagents?
 Subagents are specialized, independent instances of the agent that can be delegated specific tasks. Instead of the main agent doing all the work (and bloating its context window), it can spawn a subagent to handle a focused job and report back the results.
