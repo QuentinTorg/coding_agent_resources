@@ -1,6 +1,8 @@
 # React & TypeScript Best Practices Context
 
-*This is an `AGENTS.md` snippet. Copy the contents of this file into your workspace `AGENTS.md` (or `GEMINI.md`) file to establish a strict, highly opinionated, modern baseline for a new or existing React + TypeScript project. **Note for users:** The rules below represent modern industry consensus, but they are highly opinionated (e.g., enforcing Tailwind and Zustand). Please feel free to modify these rules so that the opinions reflect your own stack preferences (e.g., swapping Tailwind for CSS Modules, or Zustand for Redux).*
+*This is an `AGENTS.md` snippet. Copy the contents of this file into your workspace `AGENTS.md` (or `GEMINI.md`) file to establish a strict, highly opinionated, modern baseline for a new or existing React + TypeScript project.*
+
+> **⚠️ Important:** According to the latest research, you should only include these rules if the agent is actually failing to follow them. Avoid including "aspirational" rules that are already obvious from your code structure. **Prune this list ruthlessly** to keep your context window efficient.
 
 ---
 

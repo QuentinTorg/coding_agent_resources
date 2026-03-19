@@ -1,6 +1,8 @@
 # Python (General) Best Practices Context
 
-*This is an `AGENTS.md` snippet. Copy the contents of this file into your workspace `AGENTS.md` (or `GEMINI.md`) file to establish a strict, modern baseline for a general Python project (CLI, Data Processing, scripts, etc.). **Note for users:** The rules below represent modern industry consensus, but please feel free to modify these rules so that the opinions reflect your own stack preferences.*
+*This is an `AGENTS.md` snippet. Copy the contents of this file into your workspace `AGENTS.md` (or `GEMINI.md`) file to establish a strict, modern baseline for a general Python project.*
+
+> **⚠️ Important:** According to the latest research, you should only include these rules if the agent is actually failing to follow them. Avoid including "aspirational" rules that are already obvious from your code structure. **Prune this list ruthlessly** to keep your context window efficient.
 
 ---
 

@@ -1,6 +1,8 @@
 # Python FastAPI Best Practices Context
 
-*This is an `AGENTS.md` snippet. Copy the contents of this file into your workspace `AGENTS.md` (or `GEMINI.md`) file to establish a strict, highly opinionated, modern baseline for a Python FastAPI backend project. **Note for users:** The rules below represent modern industry consensus, but they are highly opinionated (e.g., enforcing Ruff and SQLAlchemy 2.0). Please feel free to modify these rules so that the opinions reflect your own stack preferences (e.g., swapping SQLAlchemy for SQLModel, or Ruff for Flake8).*
+*This is an `AGENTS.md` snippet. Copy the contents of this file into your workspace `AGENTS.md` (or `GEMINI.md`) file to establish a strict, highly opinionated, modern baseline for a Python FastAPI backend project.*
+
+> **⚠️ Important:** According to the latest research, you should only include these rules if the agent is actually failing to follow them. Avoid including "aspirational" rules that are already obvious from your code structure. **Prune this list ruthlessly** to keep your context window efficient.
 
 ---
 
