@@ -4,7 +4,7 @@ The goal of this repository is to provide a quick reference and onboarding guide
 
 ## Introduction: What is an AI Coding Agent?
 
-An AI coding agent is an advanced AI model integrated directly into your development environment (like your terminal or IDE). Unlike a standard chatbot that only answers questions, an agent can read your files, execute terminal commands, run tests, and autonomously write or modify code. 
+An AI coding agent is an advanced AI model integrated directly into your development environment (like your terminal or IDE). Unlike a standard chatbot that only answers questions, an agent can read your files, execute terminal commands, run tests, and autonomously write or modify code.
 
 While this guide focuses primarily on **Gemini CLI**, the principles and best practices apply to other powerful agents like **Claude Code** and **Codex**. We use cross-compatible conventions, such as `AGENTS.md` for context files, to ensure these resources are useful regardless of your specific tool.
 
@@ -18,7 +18,7 @@ You can use agents to:
 
 ## Core Fundamentals (Before You Start)
 
-If you are a senior engineer but a beginner to AI agents, your instincts might betray you. You cannot interact with an agent the same way you interact with a human colleague or a simple Google search. 
+If you are a senior engineer but a beginner to AI agents, your instincts might betray you. You cannot interact with an agent the same way you interact with a human colleague or a simple Google search.
 
 <details>
 <summary><strong>Read the Core Fundamentals</strong></summary>
@@ -26,7 +26,7 @@ If you are a senior engineer but a beginner to AI agents, your instincts might b
 1. **You are the Pilot:** The agent is a junior developer with infinite typing speed but zero architectural intuition. You must dictate the architecture, the workflow, and the boundaries. If you let the agent drive, it will write spaghetti code.
 2. **Break Tasks Down (Atomic Steps):** Do not give the agent a massive prompt like *"Build the new perception pipeline."* Instead, break it down: *"Draft a design doc for the perception pipeline,"* followed by *"Implement the data ingestion node,"* followed by *"Write unit tests for the ingestion node."* Small, verifiable steps prevent compounding errors.
 3. **Trust, but Verify:** Agents will confidently hallucinate nonexistent APIs or subtly break logic. Never blindly merge agent-written code. Always require the agent to write tests, or manually run your build/test suite after it finishes a task.
-4. **Leverage Its Tools:** The agent is not just a text generator. It has access to your terminal. Instead of pasting code into the chat, tell the agent: *"Use `grep` to find where the `User` class is defined and explain its dependencies."* Let it do the legwork.
+4. **Leverage Its Tools:** The agent is not just a text generator. It has access to your terminal. Instead of pasting code into the chat, tell the agent: *"Find where the `User` class is defined and explain its dependencies."*, and it will automatically use grep to find it. Let it do the legwork.
 5. **Agents Are Always Guessing:** The agent lacks the implicit team knowledge and years of context you have. Every decision is a statistical guess based on its immediate context window. It is your job to minimize the guessing by providing necessary background, enforcing strict guardrails, and forcing structured workflows.
 6. **Directives vs. Inquiries:** Understand the difference between asking a question and giving an order. An **Inquiry** (e.g., *"Why is this function crashing?"*) is a request for text analysis. A **Directive** (e.g., *"Fix the crash"*) is an order to execute a task. Enforce this boundary in your `user_level.AGENTS.md` so the agent waits for a Directive before taking action.
 </details>
@@ -43,7 +43,7 @@ To get the most out of your agent, you need to configure it correctly for your e
 *   **User vs Workspace Settings:** Most agents allow you to define settings globally (in your home directory, e.g., `~/.gemini/config.json`) or locally per-workspace. Workspace settings generally override user settings, allowing you to tailor behavior for specific projects.
 *   **Trusting Directories:** Agents like Gemini CLI operate within a security boundary. You may need to explicitly "trust" a directory before the agent can execute commands or modify files within it.
 *   **Command Policies:** To protect your system, configure command policies. You can permanently allow safe, read-only commands (like `git status`, `ls`, `grep`) so the agent doesn't pause to ask for permission during its research phase. Destructive commands (like `rm` or `git push`) should always require explicit confirmation.
-*   **Recommended Settings:** We recommend starting with strict command policies and a robust `.geminiignore` (or equivalent) to hide compiled assets, dependency folders (`node_modules/`, `venv/`), and sensitive credentials (`.env`).
+*   **Recommended Settings:** We recommend starting with strict command policies and a robust `.geminiignore` (or equivalent) to hide compiled assets, dependency folders (`node_modules/`, `venv/`), and sensitive credentials (`.env`, `.ssh/`).
 </details>
 
 ---
