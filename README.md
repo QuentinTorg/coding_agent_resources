@@ -44,7 +44,6 @@ To get the most out of your agent, you need to configure it correctly for your e
 *   **Trusting Directories:** Agents like Gemini CLI operate within a security boundary. You may need to explicitly "trust" a directory before the agent can execute commands or modify files within it.
 *   **Command Policies:** To protect your system, configure command policies. You can permanently allow safe, read-only commands (like `git status`, `ls`, `grep`) so the agent doesn't pause to ask for permission during its research phase. Destructive commands (like `rm` or `git push`) should always require explicit confirmation.
 *   **Recommended Settings:** We recommend starting with strict command policies and a robust `.geminiignore` (or equivalent) to hide compiled assets, dependency folders (`node_modules/`, `venv/`), and sensitive credentials (`.env`, `.ssh/`).
-</details>
 
 Opinionated setup recommendations are below if you are interested.
 
@@ -139,6 +138,7 @@ If you are concerned about the security of running an agent on your system, it's
 
 The downside is the container will not have your local system tools installed, forcing the agent to start fresh. The upside is you can specify exactly which Docker container it enters, meaning if you have a predefined Docker build environment, Gemini can work safely inside it without touching your host machine. For full details on passing Docker arguments and configuring environments, see the [Gemini Sandbox Documentation](https://geminicli.com/docs/cli/sandbox/).
 
+</details>
 </details>
 
 ---
