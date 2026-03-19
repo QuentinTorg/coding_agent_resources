@@ -5,18 +5,19 @@ This document serves as a backlog of ideas, templates, and best practices that w
 ## Consider removing other agent references since I don't know much about them yet. just focus on gemini for now
 *Skipped: We decided to keep references to Claude Code and Codex as they are part of the "big three" alongside Gemini CLI. We did, however, remove references to Copilot.*
 
+## address workflows section questions
+* Does the workflows section next to sub-agents and agents really make sense? Workflows seems more like recommendations for how to use the tool versus features of the tool. The other two are more like features of the tool.
+
 ## Basic getting started missing pieces
 *Skipped/Future items not yet added to the README:*
 * Document how Codex handles command policies differently (the backend safety net that makes it smoother/more agentic without explicit allow-lists).
-* Document the specific setting that allows agents to accidentally jump around to dumber/smaller models.
-* settings for showing the model its currently using
-* add some more detail about how policies work
+* add some more detail about how policies work. How to configure them, recommend which tools users should probably allow
 
 ## skills
 *Skipped/Future items not yet added to the README:*
 * Add a section explaining that triggering skills is currently delicate, and users may need to use language specifically catered to triggering the skill since they don't always trigger when expected.
 
-## 4. subagents
+## subagents
 *Skipped/Future items not yet added to the README:*
 * Explain how users can create their own custom subagents.
 
@@ -30,4 +31,4 @@ This document serves as a backlog of ideas, templates, and best practices that w
 * how do they work
 * how to set them up
 
-
+## address TODO's and "needs work" style comments in readme

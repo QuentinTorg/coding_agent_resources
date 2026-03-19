@@ -263,10 +263,15 @@ Subagents are specialized, independent instances of the agent that can be delega
 
 ### How to trigger them
 Subagents are typically exposed as tools to the main agent. You can explicitly ask your agent to "delegate this task to the `codebase_investigator` subagent" or "use the `generalist` subagent to run these tests." The main agent will then orchestrate the execution and incorporate the subagent's summary into your session.
+
+### Making your own subagents
+**TODO:** Describe how to make your own sub-agents for the different tools. explain when it makes sense to make your own sub-agents. In GemIIni, for instance, you can specify which model specific agents should use. So you could have a junior generalist and a generalist, where the junior generalist uses the smaller model for simpler tasks.
 </details>
 
 <details>
 <summary><strong>Day-to-Day Workflows</strong></summary>
+
+**TODO:** this doesn't belong here. this is more like recommendations for how to use it. the section should be more about tools/features of the agents. This is where a section on `/` commands would go. Consider if this section belongs somewhere else or should be removed. I don't really even think the content is good or correct. skills and agents should be triggered more organically if activated correctly. We shouldn't directly address specific skills.
 
 By combining Skills and Subagents, you can establish powerful day-to-day workflows:
 
@@ -288,6 +293,7 @@ Below is an index of the resources available in this repository. These are sampl
 *   **[Workspace Level Context File](./context_files/workspace_level.AGENTS.md)**: An example template for your workspace/project context.
 
 ### Example Prompts
+**TODO:** Remove prompts in favor of a skill or a slash command, or understand how the superpowers skill is actually better positioned for most of these tasks
 
 *   **[Codebase Tour Guide](./prompts/codebase_tour_guide.md)**: Map out and explain an unfamiliar subsystem.
 *   **[Deep Bug Investigation](./prompts/deep_bug_investigation.md)**: Perform methodical root-cause analysis.
@@ -299,6 +305,8 @@ Below is an index of the resources available in this repository. These are sampl
 ### Example Skills
 
 These skills can be found in the `skills/` directory. Each skill contains a `SKILL.md` file defining its behavior.
+**WARNING:** These skills are untested so far and still under development. **TODO:** Test and refine the skills. Remove skills that are not actually helpful or recommended
+
 
 *   **[Bug Detective](./skills/bug-detective/)**
 *   **[Codebase Tour](./skills/codebase-tour/)**
