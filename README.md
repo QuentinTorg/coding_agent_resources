@@ -1,14 +1,12 @@
 # Coding Agent Resources
 
-The goal of this repository is to provide a getting started guide and background information to help you quickly become proficient with AI coding agents. The defined "Big Three" are Gemini CLI, Claude Code, and Codex.
-
-It acts as both an onboarding guide and a resource library containing templates, prompts, and best practices. These resources are designed to help you safely integrate an agent into your development workflow and immediately turn it into a productive, highly capable member of your engineering team.
-
----
+The goal of this repository is to provide a quick reference and onboarding guide to help you quickly become proficient with AI coding agents.
 
 ## Introduction: What is an AI Coding Agent?
 
-An AI coding agent is an advanced AI model integrated directly into your development environment (like your terminal or IDE). Unlike a standard chatbot that only answers questions, an agent can read your files, execute terminal commands, run tests, and autonomously write or modify code. Think of it as a highly capable but context-blind engineer—it has vast programming knowledge, but it requires your guidance, guardrails, and project-specific knowledge to succeed.
+An AI coding agent is an advanced AI model integrated directly into your development environment (like your terminal or IDE). Unlike a standard chatbot that only answers questions, an agent can read your files, execute terminal commands, run tests, and autonomously write or modify code. 
+
+While this guide focuses primarily on **Gemini CLI**, the principles and best practices apply to other powerful agents like **Claude Code** and **Codex**. We use cross-compatible conventions, such as `AGENTS.md` for context files, to ensure these resources are useful regardless of your specific tool.
 
 You can use agents to:
 *   **Investigate bugs** by having them trace data flows and run reproduction scripts.
@@ -20,10 +18,10 @@ You can use agents to:
 
 ## Core Fundamentals (Before You Start)
 
+If you are a senior engineer but a beginner to AI agents, your instincts might betray you. You cannot interact with an agent the same way you interact with a human colleague or a simple Google search. 
+
 <details>
 <summary><strong>Read the Core Fundamentals</strong></summary>
-
-If you are a senior engineer but a beginner to AI agents, your instincts might betray you. You cannot interact with an agent the same way you interact with a human colleague or a simple Google search. Before diving into the technical setup, you must adopt the right mindset:
 
 1. **You are the Pilot:** The agent is a junior developer with infinite typing speed but zero architectural intuition. You must dictate the architecture, the workflow, and the boundaries. If you let the agent drive, it will write spaghetti code.
 2. **Break Tasks Down (Atomic Steps):** Do not give the agent a massive prompt like *"Build the new perception pipeline."* Instead, break it down: *"Draft a design doc for the perception pipeline,"* followed by *"Implement the data ingestion node,"* followed by *"Write unit tests for the ingestion node."* Small, verifiable steps prevent compounding errors.
@@ -35,18 +33,34 @@ If you are a senior engineer but a beginner to AI agents, your instincts might b
 
 ---
 
+## Getting Started & Settings
+
+To get the most out of your agent, you need to configure it correctly for your environment. Settings can typically be applied at both the user and workspace level.
+
+<details>
+<summary><strong>Settings & Configuration</strong></summary>
+
+*   **User vs Workspace Settings:** Most agents allow you to define settings globally (in your home directory, e.g., `~/.gemini/config.json`) or locally per-workspace. Workspace settings generally override user settings, allowing you to tailor behavior for specific projects.
+*   **Trusting Directories:** Agents like Gemini CLI operate within a security boundary. You may need to explicitly "trust" a directory before the agent can execute commands or modify files within it.
+*   **Command Policies:** To protect your system, configure command policies. You can permanently allow safe, read-only commands (like `git status`, `ls`, `grep`) so the agent doesn't pause to ask for permission during its research phase. Destructive commands (like `rm` or `git push`) should always require explicit confirmation.
+*   **Recommended Settings:** We recommend starting with strict command policies and a robust `.geminiignore` (or equivalent) to hide compiled assets, dependency folders (`node_modules/`, `venv/`), and sensitive credentials (`.env`).
+</details>
+
+---
+
 ## General Tips for Beginners
+
+Working effectively with AI agents requires a shift in how you communicate and review code.
 
 <details>
 <summary><strong>General Tips & Best Practices</strong></summary>
 
 *   **Adopt the "Pair Programmer" Mindset:** Treat the agent as a fast-typing junior developer. You remain the Senior Code Reviewer.
+*   **The "Pink Elephant" Problem (Speak in the Affirmative):** If you tell someone "Don't think of a pink elephant," they immediately think of one. LLMs work similarly. Instead of saying "Do not use `var`", say "Always use `const` or `let`". Provide positive instructions and clear examples of what you *want*, rather than a long list of what you *don't want*.
 *   **The "Explain It Back" Rule:** Never accept code you cannot understand. Ask the agent to explain complex functions line-by-line before integrating them.
 *   **Avoid "Vibe Coding":** Don't blindly accept code just because it looks correct at a glance. Always verify and run tests to catch subtle logic errors or API hallucinations.
 *   **Provide Examples (Few-Shot Prompting):** Agents perform significantly better when given a template or an existing code snippet to match your project's established style.
 *   **Model Selection:** Whenever possible, prefer using larger, more capable models for complex tasks. They save time and reduce "churn" because they are smarter and make fewer mistakes.
-*   **Permissions & Safe Commands:** Configure tools to permanently allow safe, read-only commands (like `git status`, `ls`, `grep`) to speed up the agent's research phase so it doesn't have to pause and ask for permission constantly.
-
 </details>
 
 ---
@@ -71,280 +85,103 @@ To mitigate this limitation and maintain high performance, you must proactively 
 Before you even think about clearing your context, you should try to protect it from filling up with irrelevant information:
 *   **Stay On Topic:** Do not ask the agent to perform tasks or answer questions that are not relevant to the current objective. Keep sessions focused on a single feature or bug.
 *   **Guardrail Exploration:** Protect the model from exploring massive, irrelevant directories or files. Use tools like `.geminiignore` (or equivalent) to hide compiled assets, dependency folders, and other noise.
-*   **Beware of High-Output Tools:** Be cautious when asking the agent to run commands that produce extremely long terminal outputs (like `tree` on a large directory, or printing the entirety of a massive log file). Suggest it uses `grep`, `head`/`tail`, or pagination instead.
+*   **Beware of High-Output Tools:** Be cautious when asking the agent to run commands that produce extremely long terminal outputs. Suggest it uses `grep`, `head`/`tail`, or pagination instead.
 
 **2. Prune the Context**
 Once the context inevitably starts to fill up, you have two primary commands to clean it:
-*   **Compressing/Compacting (`/compress` or `/compact`):** This command (available in many CLIs, including Gemini) tells the agent to summarize the older parts of the conversation, dropping massive file reads or lengthy command outputs, while keeping the high-level state of what you are working on. Use this after a long, messy debugging session where the agent read dozens of files or printed massive stack traces.
-*   **Clearing (`/clear`):** This command completely wipes the session history, effectively giving the agent amnesia about everything you've done so far. Use this when you have successfully finished a task, made a commit, and are switching to an entirely new feature.
-
-*Note: The exact commands and behavior vary by agent. The defined "Big Three" are Gemini CLI, Claude Code, and Codex. Some tools (like Codex) perform extremely efficient automatic compaction in the background, whereas tools with massive context windows (like Gemini) currently require more manual intervention from the user to purge unnecessary clutter and keep performance sharp.*
-
+*   **Compressing/Compacting:** This command tells the agent to summarize the older parts of the conversation, dropping massive file reads or lengthy command outputs, while keeping the high-level state of what you are working on.
+*   **Clearing:** This command completely wipes the session history, effectively giving the agent amnesia about everything you've done so far. Use this when switching to an entirely new feature.
 </details>
 
 <details>
 <summary><strong>2. Starting Context (Context Files)</strong></summary>
 
-If you have to clear your session frequently to maintain performance, how do you prevent the agent from forgetting how your project works every time you run `/clear`? The answer is **Starting Context**.
+If you have to clear your session frequently to maintain performance, how do you prevent the agent from forgetting how your project works every time? The answer is **Starting Context**.
 
 Starting Context is the permanent baseline knowledge you provide the agent when you start a new session. It is defined by markdown files—typically named `AGENTS.md` (or `CLAUDE.md`, `.cursorrules`, etc.)—which act as the "landmine detector" for the agent.
 
-**The Golden Rule (Based on latest ETH Zurich research):**
-A [recent study by ETH Zurich](https://arxiv.org/pdf/2602.11988) dropped a bombshell: **standard, auto-generated context files actually make coding agents worse.** They found that human-curated files are the only ones that boost performance, and *only* when they are concise. This means you should not use the `/init` command to auto generate the context file, despite what the agent providers recommend
+**The Golden Rule:**
+A [recent study by ETH Zurich](https://arxiv.org/pdf/2602.11988) found that **standard, auto-generated context files actually make coding agents worse.** Human-curated files are the only ones that boost performance, and *only* when they are concise.
 
 #### Why Auto-Generated Files Fail:
-*   **Attention Dilution:** Large, verbose files distract the agent with irrelevant information, causing it to explore too broadly and waste your context window.
-*   **Inference Costs:** LLM-generated files increase token costs by over 20% while reducing task success rates.
-*   **Reality Gap:** Agents "anchor" to the aspirational rules often found in generated templates, getting confused when they don't match the reality of the existing code.
-*   **Maintenance Burden:** Auto-generated files frequently include too much information, which means they quickly become outdated. Users often forget to manually update these files when they include obvious or redundant details, leading the agent to act on stale instructions.
+*   **Attention Dilution:** Large, verbose files distract the agent with irrelevant information.
+*   **Inference Costs:** They increase token costs while reducing task success rates.
+*   **Reality Gap:** Agents "anchor" to aspirational rules that don't match the reality of the existing code.
+*   **Maintenance Burden:** Auto-generated files frequently include too much information, becoming quickly outdated.
 
 To be effective, your context file must be **human-curated and hyper-minimal**. It is NOT an onboarding manual for the project—that is what your `README.md` is for. Instead, it is a list of "gotchas" that prevent the agent from making mistakes due to unique aspects of your specific codebase.
 
 #### Best Practices for Your Context File:
 *   **The "Landmines-Only" Method:** Only include non-obvious quirks of your codebase, strict architectural constraints, or specific CLI commands the agent frequently messes up.
 *   **Focus on the Invisible:** If the information can be inferred by reading the code or the `README.md`, **leave it out**. Only document what the code *cannot* tell the agent.
-*   **Avoid Aspirational Rules:** Do not document "theoretical best practices" that aren't actually enforced. The agent should reflect reality, not aspirations.
-*   **Institutional Memory:** Use the file to capture "lessons learned." If the agent falls down a specific debugging rabbit hole, document that exact fix so it doesn't happen again.
+*   **Avoid Aspirational Rules:** Do not document "theoretical best practices" that aren't actually enforced.
+*   **Institutional Memory:** Use the file to capture "lessons learned."
 
 #### What NOT to include (Delete these!):
 *   **Standard CLI Commands:** Don't include `npm install` or `npm run dev` if they do exactly what you'd expect.
-*   **High-Level Architecture:** If your folder structure is standard (e.g., `/src/components`), the agent will find it. Don't waste tokens describing it.
-*   **Boilerplate Documentation:** Avoid copy-pasting your project's history, mission statement, or basic setup guides from the README.
-*   **General Language Rules:** The agent already knows how to write clean Python or React. Don't tell it to "write modular code" unless you have a very specific definition of "modular" that it keeps breaking.
+*   **High-Level Architecture:** If your folder structure is standard, the agent will find it.
+*   **Boilerplate Documentation:** Avoid copy-pasting your project's history or basic setup guides from the README.
+*   **General Language Rules:** The agent already knows how to write clean code.
 
-*Tip: For portability across different agents, put your actual instructions in a generic `AGENTS.md` file, and use agent-specific files (e.g., `GEMINI.md`) simply to point towards it.*
-
-This context is divided into two levels: **System-wide (User) Context** and **Workspace (Project) Context**. Both should be treated as **living documents** and updated as your preferences and architectures evolve.
+This context is divided into two levels: **System-wide (User) Context** and **Workspace (Project) Context**. Both should be treated as **living documents**.
 
 #### System-Wide (User) Context
-Installed in your user home directory (e.g., `~/.gemini/` or `~/.config/`), this file defines your agent's persona and general behavior across *all* projects.
-
-*   **Purpose:** Sets global guardrails, coding style preferences, and interaction rules (like whether to ask before making changes).
-*   **Action:** Copy our example [User Level Context File](./context_files/user_level.AGENTS.md) into your system level config directory as the expected file format.
-    * **Gemini** Copy to `~/.gemini/GEMINI.md`
+Installed in your user home directory, this file defines your agent's persona and general behavior across *all* projects.
 
 #### Workspace (Project) Context
-Located in the root directory of your repository, this tells the agent how to operate *specifically* within that project. Unless highly customized for local use, it should be **committed to version control** so your entire team benefits from the shared agent context.
-
-*   **Purpose:** Provides critical, project-specific information (build systems, debugging loops, architecture, and testing frameworks).
-*   **Keep it Lean:** Do not duplicate information from your `README.md`. The README is for humans; `AGENTS.md` is strictly for the agent.
-*   **Context Optimization:** The latest research shows that standard, auto-generated context files actually degrade performance. Instead of using a prompt to blindly generate a file, use our [Review an Existing AGENTS.md File](./prompts/review_agent_md_best_practices.md) prompt to have the agent analyze your existing file and prune it to be hyper-minimal.
-
+Located in the root directory of your repository, this tells the agent how to operate *specifically* within that project. It should be **committed to version control**.
 </details>
 
 ---
 
-## Day-to-Day Workflows for Beginners
+## Skills, Subagents, and Workflows
+
+To elevate your agent's capabilities beyond simple prompt-and-response, you should leverage Skills and Subagents. These tools enable complex, multi-step workflows with high reliability.
 
 <details>
-<summary><strong>1. Starting a New Feature (The Planning Phase)</strong></summary>
-
-Never ask an agent to "build a new obstacle avoidance node" and immediately let it write code. It will guess your architecture and likely get it wrong.
-*   **The Workflow:** Force the agent to act as a System Architect first. Ask it to read the codebase, find where similar features live, and write a Markdown design document detailing the files it plans to create and the functions it will write.
-*   **The Prompt:**
-    *   Use our **[`plan_new_feature.md`](./prompts/plan_new_feature.md)** power prompt. Do not let the agent write code until you approve the plan.
-
-</details>
-
-<details>
-<summary><strong>2. The Iterative Build Loop (The Execution Phase)</strong></summary>
-
-Once a feature is planned, do not ask the agent to implement the entire design document in one go. The context window will overflow, and mistakes will compound.
-*   **The Workflow:** Break the plan down. Ask the agent to implement *one* specific file or component at a time.
-*   **The Loop:**
-    1. Prompt the agent to build Component A.
-    2. Prompt the agent to write the unit tests for Component A.
-    3. Run the tests. If they fail, paste the error back to the agent to fix.
-    4. Once tests pass, explicitly instruct the agent: *"Great, make a surgical commit for Component A."*
-    5. Move on to Component B.
-
-</details>
-
-<details>
-<summary><strong>3. Debugging (The Investigation Phase)</strong></summary>
-
-When an agent sees a stack trace, its instinct is to immediately write a code fix based on a guess. This often breaks things further.
-*   **The Workflow:** Force the agent to be a detective. Tell it to read the stack trace, use `grep` to find the relevant files, and explain the execution path to you in plain English. Forbid it from writing a fix until it proves the bug by writing a failing test script.
-*   **The Prompt:**
-    *   Use our **[`deep_bug_investigation.md`](./prompts/deep_bug_investigation.md)** power prompt to enforce this behavior.
-
-</details>
-
-<details>
-<summary><strong>4. Codebase Onboarding (The "Tour Guide" Workflow)</strong></summary>
-
-Agents are not just for writing code; they are incredible tools for rapidly onboarding yourself onto a massive, unfamiliar codebase. Instead of spending hours tracing function calls manually, you can ask the agent to act as a senior developer giving you a tour.
-*   **The Workflow:** Forbid the agent from modifying code, and ask it to trace a specific data flow or explain a complex module step-by-step.
-*   **The Prompts:**
-    *   **For a deep dive:** Use our **[`codebase_tour_guide.md`](./prompts/codebase_tour_guide.md)** power prompt.
-    *   **For a quick inline question:** Use something like: *"I am new to this codebase. Please read the `src/navigation/` directory and explain to me step-by-step how the sensor telemetry data is ingested and filtered in the state estimator. Do not write or modify any code."*
-
-</details>
-
-<details>
-<summary><strong>5. Targeted Refactoring</strong></summary>
-
-If you give an agent a vague prompt like *"Clean up this file and make it better,"* it will likely rewrite the entire file, change your formatting, and potentially break subtle edge cases.
-*   **The Workflow:** Give specific, architectural directives rather than vague cleanup requests.
-*   **The Prompts:**
-    *   *"Please extract all the direct database queries in `user.py` into a separate `user_repository.py` file."*
-    *   *"Convert this C++ class to use smart pointers (`std::shared_ptr` and `std::unique_ptr`) instead of raw pointers to prevent memory leaks."*
-
-</details>
-
-<details>
-<summary><strong>6. Code Review & GitHub Integration</strong></summary>
-
-If you have the GitHub CLI (`gh`) installed and authenticated, your agent can act as a fully automated code reviewer and PR author.
-
-*Use this prompt when you have finished your local feature branch and are ready to open a PR. The agent will read your diff and use the GitHub CLI to create the PR.*
-
-```text
-Please read my uncommitted changes and my recent git history for this branch.
-Draft a comprehensive Pull Request title and description explaining the "why" and "what" of these changes.
-Once I approve the text, use the `gh pr create` command to open the pull request.
-```
-
-*Use this prompt to have the agent read a teammate's PR and leave inline comments.*
-
-```text
-Please use the GitHub CLI to view PR #[INSERT_PR_NUMBER].
-Read the diff and review the code for logic errors, edge cases, or architectural issues.
-Do not comment on stylistic nitpicks.
-If you find issues, use the `gh api` to post inline code review comments. Prefix all your comments with "🤖 *Agent:*" so my team knows this is an automated review.
-```
-</details>
-
----
-
-## Agent Settings
-
-Different agents and models have specific configurations. Click to expand the settings for the model you are using.
-
-<details>
-<summary><strong>Gemini CLI</strong></summary>
-
-### Gemini CLI Settings
-*   **Authentication:** Ensure you have set up your API keys and authenticated correctly via the CLI (`gemini auth`).
-*   **Configuration Files:** Gemini CLI looks for `GEMINI.md` files. You can point your `GEMINI.md` to read an `AGENTS.md` file (to keep instructions cross-compatible with other agents) by adding exactly `@AGENTS.md` to the first line of the file.
-
-<details>
-<summary><strong>Snippet: Auto-Approve Safe Commands</strong></summary>
-
-*Add the following to your `~/.gemini/config.json` to permanently allow the agent to run safe, read-only commands without pausing for your permission. This dramatically speeds up the agent's research phase.*
-**OUTDATED** Gemini now uses a security policy model.
-
-```json
-{
-  "tools": {
-    "run_shell_command": {
-      "autoApprove": [
-        "git status",
-        "git diff",
-        "git log",
-        "git show",
-        "git branch",
-        "cd",
-        "pwd",
-        "cat",
-        "ls",
-        "head",
-        "tail",
-        "grep",
-        "rg",
-        "find",
-        "wc",
-        "sleep",
-        "timeout",
-        "tree",
-        "echo",
-        "which",
-        "jq"
-      ]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><strong>Snippet: Security & System Ignores (.geminiignore)</strong></summary>
-
-*Create a `.geminiignore` file in your home directory (`~/.geminiignore`) or your project root to prevent the agent from reading sensitive files or wasting tokens on massive directories.*
-
-```text
-# Security & Credentials
-.env
-.env.*
-.ssh/
-*.pem
-*.key
-credentials.json
-
-# Large/Unnecessary Directories
-node_modules/
-__pycache__/
-venv/
-dist/
-build/
-.git/
-```
-</details>
-
-</details>
-
-<details>
-<summary><strong>Claude Code</strong></summary>
-
-### Claude Code Settings
-*(Details and snippets for configuring Claude Code will be added here)*
-
-</details>
-
-<details>
-<summary><strong>Codex</strong></summary>
-
-### Codex Settings
-*(Details and snippets for configuring Codex will be added here. The defined "Big Three" are Gemini CLI, Claude Code, and Codex.)*
-
-</details>
-
----
-
-## Gemini CLI Skills
-
-While copying and pasting prompts from the `prompts/` directory is a good start, **Gemini CLI Skills** offer a significantly more powerful, seamless, and context-efficient way to use these workflows.
+<summary><strong>Skills</strong></summary>
 
 ### What are Skills?
-Skills are modular, self-contained packages that extend Gemini CLI's capabilities by providing specialized knowledge, strict procedural workflows, and bundled resources. They essentially transform the agent from a general-purpose AI into an expert with procedural memory for a specific task.
+Skills are modular, self-contained packages that extend an agent's capabilities by providing specialized knowledge, strict procedural workflows, and bundled resources. They transform the agent from a general-purpose AI into an expert with procedural memory for a specific task.
 
-### Why are they better than prepared prompts?
-* **Context Efficiency:** Instead of dumping a massive prompt into your session every time (which eats up your token limit and degrades model performance), a Skill uses **Progressive Disclosure**. The agent only loads the skill's instructions into context *after* it decides the skill is relevant to your request.
-* **Natural Language Triggering:** You don't need to copy-paste anything or remember macro commands. Skills are triggered semantically. Simply ask the agent to "give me a codebase tour" or "act as a bug detective," and it will automatically load the appropriate Skill.
-* **Bundled Resources:** Skills can contain their own executable scripts, templates, and reference documents that are kept completely out of the context window until the exact moment the agent needs them.
+### How do they work?
+*   **Dynamic Loading:** Instead of dumping a massive prompt into your session every time (which eats up your token limit), a Skill uses **Progressive Disclosure**. The agent only loads the skill's instructions into context *after* it decides the skill is relevant or you explicitly activate it.
+*   **User vs Workspace Scoping:** Skills can be installed globally for a user (available in all projects) or locally to a specific workspace. Workspace skills are excellent for standardizing team workflows.
 
-### How are they defined?
-A Skill is essentially a directory containing a `SKILL.md` file.
-* The **YAML Frontmatter** of `SKILL.md` defines the `name` and a `description` (which acts as the trigger condition).
-* The **Markdown Body** contains the imperative instructions the agent must follow.
+### Ideas for Custom Skills
+*   **Repo Setup:** A skill that automatically checks dependencies, runs initialization scripts, and verifies the environment is ready for development.
+*   **PR Workflows:** A skill that runs linters, generates a comprehensive PR description based on git diffs, and submits the PR via the GitHub CLI.
+*   **Deployment:** A skill that builds the project, runs deployment scripts, and verifies the deployment succeeded.
 
-### How to use them in this repository
-We have converted all of the example prompts into fully packaged `.skill` files located in the `skills/` directory:
-* `codebase-tour.skill`
-* `bug-detective.skill`
-* `devils-advocate.skill`
-* `context-file-reviewer.skill`
-* `test-generator.skill`
-* `feature-architect.skill`
+### Recommended Skills List
+We highly recommend exploring the `superpowers` extension for Gemini CLI, which includes a suite of powerful skills such as:
+*   `brainstorming`
+*   `writing-plans`
+*   `test-driven-development`
+*   `systematic-debugging`
+*   `requesting-code-review`
+</details>
 
-### How to Install Skills
-You can install these skills locally to this workspace by running the following command in your terminal:
+<details>
+<summary><strong>Subagents</strong></summary>
 
-```bash
-gemini skills install ./skills/<skill-name>.skill --scope workspace
-```
+### What are Subagents?
+Subagents are specialized, independent instances of the agent that can be delegated specific tasks. Instead of the main agent doing all the work (and bloating its context window), it can spawn a subagent to handle a focused job and report back the results.
 
-**Important:** After installing, you must manually run `/skills reload` within your interactive Gemini CLI session to enable the new skill. You can verify it is active by typing `/skills list`.
+### How to trigger them
+Subagents are typically exposed as tools to the main agent. You can explicitly ask your agent to "delegate this task to the `codebase_investigator` subagent" or "use the `generalist` subagent to run these tests." The main agent will then orchestrate the execution and incorporate the subagent's summary into your session.
+</details>
+
+<details>
+<summary><strong>Day-to-Day Workflows</strong></summary>
+
+By combining Skills and Subagents, you can establish powerful day-to-day workflows:
+
+1.  **Planning:** Activate a planning skill (like `writing-plans`) to draft a comprehensive design document before writing code.
+2.  **Implementation:** Use a subagent-driven workflow (like the `subagent-driven-development` skill) to delegate independent components to parallel subagents.
+3.  **Debugging:** When a test fails, activate a debugging skill (like `systematic-debugging`) or delegate to a specialized investigator subagent to find the root cause without polluting your main session context.
+4.  **Review:** Before merging, use a review skill (like `requesting-code-review`) to ensure your changes meet all project standards and conventions.
+</details>
 
 ---
 
@@ -354,18 +191,25 @@ Below is an index of the resources available in this repository. These are sampl
 
 ### Example Agent Contexts
 
-> **💡 Note on Customization:** All of the templates and cheatsheets below are meant to be starting points. You are highly encouraged to modify them—or better yet, prompt your coding agent to rewrite them—so that the stated opinions and rules perfectly match your preferred tech stack and personal workflow!
-
-*   **[User Level Context File](./context_files/user_level.AGENTS.md)**: An example template for your system-wide user context. Use this to define your agent's core persona and operational rules.
-*   **[Workspace Level Context File](./context_files/workspace_level.AGENTS.md)**: An example template for your workspace/project context. Use this to teach an agent about a specific repository's build system and contribution guidelines.
-*   **[React Best Practices](./context_files/react_best_practices.AGENTS.md)**: A highly opinionated snippet to establish modern React/TypeScript best practices (Vite, Tailwind, Zustand, React Query).
-*   **[C++ Best Practices](./context_files/cpp_best_practices.AGENTS.md)**: A snippet enforcing modern C++17/20 standards (smart pointers, Rule of Zero, `<algorithm>`).
-*   **[Python Best Practices](./context_files/python_general_best_practices.AGENTS.md)**: A snippet establishing strict rules for general Python development (type hinting, Ruff, path manipulation).
+*   **[User Level Context File](./context_files/user_level.AGENTS.md)**: An example template for your system-wide user context.
+*   **[Workspace Level Context File](./context_files/workspace_level.AGENTS.md)**: An example template for your workspace/project context.
 
 ### Example Prompts
-*   **[Review an Existing AGENTS.md File](./prompts/review_agent_md_best_practices.md)**: A prompt designed to be pasted into a coding agent to make it automatically analyze an existing `AGENTS.md` context file and suggest improvements based on the latest research for minimal, high-signal instructions.
-*   **[Codebase Tour Guide](./prompts/codebase_tour_guide.md)**: Transforms the agent into a senior engineer to map out and explain an unfamiliar subsystem or architecture without writing any code.
-*   **[Deep Bug Investigation](./prompts/deep_bug_investigation.md)**: Forces the agent into a methodical "detective" mindset to perform root-cause analysis without guessing or immediately writing code.
-*   **[Devil's Advocate PR Review](./prompts/devils_advocate_pr_review.md)**: Forces the agent to act as a highly skeptical reviewer tasked with breaking your code and finding edge cases, memory leaks, or race conditions before you open a PR.
-*   **[Plan New Feature](./prompts/plan_new_feature.md)**: Instructs the agent to act as a System Architect, requiring it to write and get approval on a design document before implementing a large feature.
-*   **[Generate Exhaustive Tests](./prompts/generate_exhaustive_tests.md)**: Turns the agent into a rigorous QA engineer, forcing it to list all boundary conditions, edge cases, and failure states before writing test code.
+
+*   **[Codebase Tour Guide](./prompts/codebase_tour_guide.md)**: Map out and explain an unfamiliar subsystem.
+*   **[Deep Bug Investigation](./prompts/deep_bug_investigation.md)**: Perform methodical root-cause analysis.
+*   **[Devil's Advocate PR Review](./prompts/devils_advocate_pr_review.md)**: Find edge cases before opening a PR.
+*   **[Generate Exhaustive Tests](./prompts/generate_exhaustive_tests.md)**: List boundary conditions before writing test code.
+*   **[Plan New Feature](./prompts/plan_new_feature.md)**: Draft a design document before implementing a feature.
+*   **[Review an Existing AGENTS.md File](./prompts/review_agent_md_best_practices.md)**: Analyze an existing context file and suggest improvements.
+
+### Example Skills
+
+These skills can be found in the `skills/` directory. Each skill contains a `SKILL.md` file defining its behavior.
+
+*   **[Bug Detective](./skills/bug-detective/)**
+*   **[Codebase Tour](./skills/codebase-tour/)**
+*   **[Context File Reviewer](./skills/context-file-reviewer/)**
+*   **[Devil's Advocate](./skills/devils-advocate/)**
+*   **[Feature Architect](./skills/feature-architect/)**
+*   **[Test Generator](./skills/test-generator/)**
