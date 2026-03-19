@@ -202,19 +202,19 @@ A [recent study by ETH Zurich](https://arxiv.org/pdf/2602.11988) found that **st
 *   **Reality Gap:** Agents "anchor" to aspirational rules that don't match the reality of the existing code.
 *   **Maintenance Burden:** Auto-generated files frequently include too much information, becoming quickly outdated.
 
-To be effective, your context file must be **human-curated and hyper-minimal**. It is NOT an onboarding manual for the project—that is what your `README.md` is for. Instead, it is a list of "gotchas" that prevent the agent from making mistakes due to unique aspects of your specific codebase.
+To be effective, your context file must be **human-curated and hyper-minimal**. It is NOT an onboarding manual for the project—that is what your `README.md` is for. Instead, it is a list of "gotchas" that prevent the agent from making mistakes due to unique aspects of your specific codebase. In general, you should not include any information in your context files that the agent already knows, or can infer from your codebase without your input. Despite the recommendations of most of the agentic toolchains, you should not use the `/init` command to auto-generate a context file.
 
 #### Best Practices for Your Context File:
 *   **The "Landmines-Only" Method:** Only include non-obvious quirks of your codebase, strict architectural constraints, or specific CLI commands the agent frequently messes up.
 *   **Focus on the Invisible:** If the information can be inferred by reading the code or the `README.md`, **leave it out**. Only document what the code *cannot* tell the agent.
-*   **Avoid Aspirational Rules:** Do not document "theoretical best practices" that aren't actually enforced.
 *   **Institutional Memory:** Use the file to capture "lessons learned."
 
-#### What NOT to include (Delete these!):
+#### What NOT to include:
 *   **Standard CLI Commands:** Don't include `npm install` or `npm run dev` if they do exactly what you'd expect.
 *   **High-Level Architecture:** If your folder structure is standard, the agent will find it.
 *   **Boilerplate Documentation:** Avoid copy-pasting your project's history or basic setup guides from the README.
 *   **General Language Rules:** The agent already knows how to write clean code.
+*   **Avoid Aspirational Rules:** Do not document "theoretical best practices" that aren't actually enforced.
 
 This context is divided into two levels: **System-wide (User) Context** and **Workspace (Project) Context**. Both should be treated as **living documents**.
 
