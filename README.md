@@ -16,19 +16,33 @@ You can use agents to:
 
 ---
 
-## Core Fundamentals (Before You Start)
+## Core Fundamentals & Best Practices
 
-If you are a senior engineer but a beginner to AI agents, your instincts might betray you. You cannot interact with an agent the same way you interact with a human colleague or a simple Google search.
+If you are a senior engineer but a beginner to AI agents, your instincts might betray you. You cannot interact with an agent the same way you interact with a human colleague or a simple Google search. Working effectively requires a shift in how you communicate and review code.
 
 <details>
-<summary><strong>Read the Core Fundamentals</strong></summary>
+<summary><strong>1. The Mindset (Philosophy)</strong></summary>
 
-1. **You are the Pilot:** The agent is a junior developer with infinite typing speed but zero architectural intuition. You must dictate the architecture, the workflow, and the boundaries. If you let the agent drive, it will write spaghetti code.
-2. **Break Tasks Down (Atomic Steps):** Do not give the agent a massive prompt like *"Build the new perception pipeline."* Instead, break it down: *"Draft a design doc for the perception pipeline,"* followed by *"Implement the data ingestion node,"* followed by *"Write unit tests for the ingestion node."* Small, verifiable steps prevent compounding errors.
-3. **Trust, but Verify:** Agents will confidently hallucinate nonexistent APIs or subtly break logic. Never blindly merge agent-written code. Always require the agent to write tests, or manually run your build/test suite after it finishes a task.
-4. **Leverage Its Tools:** The agent is not just a text generator. It has access to your terminal. Instead of pasting code into the chat, tell the agent: *"Find where the `User` class is defined and explain its dependencies."*, and it will automatically use grep to find it. Let it do the legwork.
-5. **Agents Are Always Guessing:** The agent lacks the implicit team knowledge and years of context you have. Every decision is a statistical guess based on its immediate context window. It is your job to minimize the guessing by providing necessary background, enforcing strict guardrails, and forcing structured workflows.
-6. **Directives vs. Inquiries:** Understand the difference between asking a question and giving an order. An **Inquiry** (e.g., *"Why is this function crashing?"*) is a request for text analysis. A **Directive** (e.g., *"Fix the crash"*) is an order to execute a task. Enforce this boundary in your `user_level.AGENTS.md` so the agent waits for a Directive before taking action.
+*   **You are the Pilot:** Treat the agent as a fast-typing junior developer. You remain the Senior Code Reviewer. It has infinite typing speed but zero architectural intuition. You must dictate the architecture, the workflow, and the boundaries. If you let the agent drive, it will write spaghetti code.
+*   **Trust, but Verify (Avoid "Vibe Coding"):** Agents will confidently hallucinate nonexistent APIs or subtly break logic. Don't blindly accept code just because it looks correct at a glance. Always require the agent to write tests, or manually run your build/test suite after it finishes a task.
+*   **Agents Are Always Guessing:** The agent lacks the implicit team knowledge and years of context you have. Every decision is a statistical guess based on its immediate context window. It is your job to minimize the guessing by providing necessary background, enforcing strict guardrails, and forcing structured workflows.
+</details>
+
+<details>
+<summary><strong>2. Tactical Prompting (How to talk to it)</strong></summary>
+
+*   **Break Tasks Down (Atomic Steps):** Do not give the agent a massive prompt like *"Build the new perception pipeline."* Instead, break it down: *"Draft a design doc for the perception pipeline,"* followed by *"Implement the data ingestion node,"* followed by *"Write unit tests."* Small, verifiable steps prevent compounding errors.
+*   **The "Pink Elephant" Problem (Speak in the Affirmative):** If you tell someone "Don't think of a pink elephant," they immediately think of one. LLMs work similarly. Instead of saying "Do not use `var`", say "Always use `const` or `let`". Provide positive instructions and clear examples of what you *want*, rather than a long list of what you *don't want*.
+*   **Directives vs. Inquiries:** Understand the difference between asking a question and giving an order. An **Inquiry** (e.g., *"Why is this function crashing?"*) is a request for text analysis. A **Directive** (e.g., *"Fix the crash"*) is an order to execute a task. Enforce this boundary in your `user_level.AGENTS.md` so the agent waits for a Directive before taking action.
+*   **Provide Examples (Few-Shot Prompting):** Agents perform significantly better when given a template or an existing code snippet to match your project's established style.
+</details>
+
+<details>
+<summary><strong>3. Workflow Strategies (How to use it)</strong></summary>
+
+*   **Leverage Its Tools:** The agent is not just a text generator. It has access to your terminal. Instead of pasting code into the chat, tell the agent: *"Find where the `User` class is defined and explain its dependencies."* Let it use `grep` to do the legwork.
+*   **The "Explain It Back" Rule:** Never accept code you cannot understand. Ask the agent to explain complex functions line-by-line before integrating them.
+*   **Model Selection:** Whenever possible, prefer using larger, more capable models (like Gemini Pro) for complex tasks. They save time and reduce "churn" because they are smarter and make fewer mistakes. Switch to smaller models (like Flash) only for simple, repetitive tasks to save tokens.
 </details>
 
 ---
@@ -139,23 +153,6 @@ If you are concerned about the security of running an agent on your system, it's
 The downside is the container will not have your local system tools installed, forcing the agent to start fresh. The upside is you can specify exactly which Docker container it enters, meaning if you have a predefined Docker build environment, Gemini can work safely inside it without touching your host machine. For full details on passing Docker arguments and configuring environments, see the [Gemini Sandbox Documentation](https://geminicli.com/docs/cli/sandbox/).
 
 </details>
-</details>
-
----
-
-## General Tips for Beginners
-
-Working effectively with AI agents requires a shift in how you communicate and review code.
-
-<details>
-<summary><strong>General Tips & Best Practices</strong></summary>
-
-*   **Adopt the "Pair Programmer" Mindset:** Treat the agent as a fast-typing junior developer. You remain the Senior Code Reviewer.
-*   **The "Pink Elephant" Problem (Speak in the Affirmative):** If you tell someone "Don't think of a pink elephant," they immediately think of one. LLMs work similarly. Instead of saying "Do not use `var`", say "Always use `const` or `let`". Provide positive instructions and clear examples of what you *want*, rather than a long list of what you *don't want*.
-*   **The "Explain It Back" Rule:** Never accept code you cannot understand. Ask the agent to explain complex functions line-by-line before integrating them.
-*   **Avoid "Vibe Coding":** Don't blindly accept code just because it looks correct at a glance. Always verify and run tests to catch subtle logic errors or API hallucinations.
-*   **Provide Examples (Few-Shot Prompting):** Agents perform significantly better when given a template or an existing code snippet to match your project's established style.
-*   **Model Selection:** Whenever possible, prefer using larger, more capable models for complex tasks. They save time and reduce "churn" because they are smarter and make fewer mistakes.
 </details>
 
 ---
