@@ -2,6 +2,9 @@
 
 The goal of this repository is to provide a quick reference and onboarding guide to help you quickly become proficient with AI coding agents.
 
+> [!IMPORTANT]
+> Tooling is quickly evolving and new research seems to come out every day. If you see a mistake in the doc or hear about something you think should be included, please [make an issue](https://github.com/QuentinTorg/coding_agent_resources/issues/new/choose)
+
 ---
 
 - [Introduction: What is an AI Coding Agent?](#introduction-what-is-an-ai-coding-agent)
@@ -265,12 +268,20 @@ Skills are modular, self-contained packages that extend an agent's capabilities 
 *   **Deployment:** A skill that builds the project, runs deployment scripts, and verifies the deployment succeeded.
 
 ### Recommended Skills List
-We highly recommend exploring the `superpowers` extension for Gemini CLI, which includes a suite of powerful skills such as:
-*   `brainstorming`
-*   `writing-plans`
-*   `test-driven-development`
-*   `systematic-debugging`
-*   `requesting-code-review`
+
+#### Superpowers
+
+[`Superpowers`](https://github.com/obra/superpowers) is an open-source skills framework that forces AI coding agents (like Claude Code and Gemini CLI) to follow strict software engineering methodologies. It overrides the agent's default behavior of jumping straight into writing code. Superpowers is designed for stability rather than immediate speed. By forcing the agent to document its intent, work in small chunks, and verify every step, it prevents the AI from losing context ("AI amnesia") during complex, long-running tasks and ensures all output is tested and architecturally sound.
+
+Core Mechanics & Workflows:
+*    **Mandatory Planning:** The agent is blocked from writing implementation code until it asks clarifying questions, drafts a specification, and creates a step-by-step PLAN.md file.
+*    **Isolated Git Worktrees:** Tasks automatically execute in isolated Git worktrees, preventing experimental AI changes from modifying your main branch.
+*    **Forced TDD:** Enforces a strict Red-Green-Refactor cycle. The agent must write and run a failing test before it is allowed to write the corresponding feature code.
+*    **Systematic Debugging:** Replaces AI "guess-and-check" fixes with a mandatory, multi-phase root-cause investigation before any patch code is written.
+
+> [!NOTE]
+> As discussed above, one of the current issues with skills is having them trigger reliably. For the superpowers skill, the easiest way to trigger the workflow is to ask it to "brainstorm" a new feature with you.
+
 </details>
 
 <details>

@@ -1,6 +1,10 @@
 # Ideas for Future Repository Additions
 
-This document serves as a backlog of ideas, templates, and best practices that we plan to add to the `coding_agent_resources` repository.
+This document serves as a backlog of ideas, templates, cleanup, and best practices that we plan to add to the `coding_agent_resources` repository.
+
+## add example usage.
+Considering this is an onboarding repo, I think it would make sense in the beginning to have some real examples of situations where the agent can be useful and some simple prompts that can be used to have it do certain tasks.
+Example, simple prompt, opening up a pull request, making a commit, debugging a build issue. Open to other ideas.
 
 ## Consider removing other agent references since I don't know much about them yet. just focus on gemini for now
 *Skipped: We decided to keep references to Claude Code and Codex as they are part of the "big three" alongside Gemini CLI. We did, however, remove references to Copilot.*
@@ -30,5 +34,6 @@ This document serves as a backlog of ideas, templates, and best practices that w
 * what are they good for
 * how do they work
 * how to set them up
+* put the slash commands in the section with skills and subagents
 
 ## address TODO's and "needs work" style comments in readme
