@@ -171,7 +171,7 @@ Below are opinionated snippets from a recommended `settings.json` file. Each sec
 *   `modelSteering`: Set to `true` to enable injecting commands while the agent is in a chain of thought. If you see the agent start heading down the wrong path, you don't have to kill the process; you can simply type a comment to nudge it ("Look out for this pitfall", or "I prefer to use this build command").
 
 ### The Superpowers Extension
-If you want to immediately supercharge Gemini's methodical workflows, you can install the Superpowers extension. However, **we recommend starting without it for your first few projects** so you understand how the vanilla agent behaves before manipulating it.
+If you want to immediately supercharge Gemini's methodical workflows, you can install the Superpowers extension (see our [detailed breakdown below](#superpowers)). However, **we recommend starting without it for your first few projects** so you understand how the vanilla agent behaves before manipulating it.
 ```bash
 gemini extensions install https://github.com/obra/superpowers
 ```
