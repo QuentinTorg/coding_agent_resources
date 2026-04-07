@@ -15,7 +15,6 @@ Example, simple prompt, opening up a pull request, making a commit, debugging a 
 ## Basic getting started missing pieces
 *Skipped/Future items not yet added to the README:*
 * Document how Codex handles command policies differently (the backend safety net that makes it smoother/more agentic without explicit allow-lists).
-* add some more detail about how policies work. How to configure them, recommend which tools users should probably allow
 
 ## skills
 *Skipped/Future items not yet added to the README:*

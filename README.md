@@ -45,7 +45,7 @@ If you are a seasoned engineer but a beginner to AI agents, your instincts might
 <summary><strong>1. The Mindset (Philosophy)</strong></summary>
 
 *   **You are the Pilot:** Do not grant the agent the autonomy of a senior engineer. Treat it like an extremely eager, fast-typing intern. It is highly capable of writing code, but it does not see the big picture and lacks architectural intuition. If left to its own devices without strict direction, it will write a massive amount of code that might "work" but will be an unsustainable, unmaintainable mess. You must dictate the architecture, the workflow, and the boundaries.
-    * Keep in mind though, agents are extremely capable in any domain if you can keep the task narrow. If prompted to help make an archetecture decision, it will still be able to provide constructive feedback that you can use to generate an implementation plan
+    * Keep in mind though, agents are extremely capable in any domain if you can keep the task narrow. If prompted to help make an architecture decision, it will still be able to provide constructive feedback that you can use to generate an implementation plan
 *   **Trust, but Verify (Avoid "Vibe Coding"):** Agents will confidently hallucinate nonexistent APIs or subtly break logic. Don't blindly accept code just because it looks correct at a glance. Always require the agent to write tests, or manually run your build/test suite after it finishes a task.
 *   **Agents Are Always Guessing:** The agent lacks the implicit team knowledge and years of context you have. Every decision is a statistical guess based on its immediate context window. It is your job to minimize the guessing by providing necessary background, enforcing strict guardrails, and forcing structured workflows.
 </details>
@@ -89,8 +89,18 @@ Opinionated setup recommendations are below if you are interested.
 ### Installation
 Installation information and prerequisites can be found in the [official Gemini CLI documentation](https://geminicli.com/docs/get-started/installation/).
 
-### Tool Conservatism
-By default, Gemini is quite conservative with its tool use to protect your system. It will ask for permission before running most bash tools or modifying files. You can even force it into a strict read-only mode by default if you desire. It generally only executes its own internal codebase exploration tools without asking. Below, we'll configure settings to allow permanent approval for safe tools so you aren't constantly interrupted.
+### Tool Conservatism & The Policy Engine
+By default, Gemini is quite conservative with its tool use to protect your system. It will ask for permission before running most bash tools or modifying files. You can even force it into a strict read-only mode by default if you desire. It generally only executes its own internal codebase exploration tools without asking. 
+
+To make the agent more autonomous without sacrificing safety, Gemini utilizes a **Policy Engine** configured via `.toml` files. These policies define exactly which commands the agent is allowed to run autonomously (`allow`), which require confirmation (`ask_user`), and which are strictly blocked (`deny`).
+
+We have provided an example policy file in [`settings/gemini_security_policy.toml`](./settings/gemini_security_policy.toml). The majority of the rules in this config file allow the agent to use more system tools as long as they are read-only (like `grep`, `cat`, `git diff`, and safe `docker` commands). This means the agent will ask for permission less often during its research phase, while still explicitly blocking dangerous, mutating, or exfiltration commands. We recommend you review this document and ensure you are comfortable with the tools that have been given permission. 
+
+**High-Level Policy Guide:**
+For complete details, please refer to the [official Gemini CLI Policy Engine documentation](https://geminicli.com/docs/reference/policy-engine/).
+*   **Installation & Organization:** Policies are currently applied at the user level. You must place your `.toml` files in `~/.gemini/policies/`. You can organize your rules into as many files as you desire; the engine will parse *any* `.toml` file it finds in that directory. Workspace-level policies (inside your project directory) are not currently supported, so you will have to use the user-level directory to grant permissions for any repo-specific tooling.
+*   **Granting Permissions (Shell Commands):** To allow a new tool, you create a `[[rule]]` block. For the common use case of allowing specific shell scripts or terminal commands, you can use the `commandPrefix` option (e.g., `commandPrefix = ["npm run test"]`) with `decision = "allow"`.
+*   **Prefix vs. Regex (The Regex Caveat):** The `commandPrefix` option is a convenience tool specifically for shell commands that makes simple matching easy. However, if you need more complex matching and choose to use the `commandRegex` or `argsPattern` options, there is a catch. The regex options match against a JSON payload string representing the tool's arguments (e.g., `{"command": "your command"}`), *not* the raw command string itself. Therefore, **do not use strict start (`^`) or end (`$`) anchors** as if matching a simple text string, because they will fail to match the surrounding JSON syntax. This caveat only applies to the regex configuration lines.
 
 ### Opinionated Settings
 We highly recommend reviewing the [official Gemini Settings Documentation](https://geminicli.com/docs/cli/settings/) to see all available customizations. You can modify these settings globally at `~/.gemini/settings.json` or locally per-project at `your-project/.gemini/settings.json`.
@@ -106,7 +116,7 @@ Below are opinionated snippets from a recommended `settings.json` file. Each sec
   }
 }
 ```
-*   `enablePermanentToolApproval`: Set this to `true` if you want the ability to permanently allow safe, read-only tools (like `grep`, `ls`, `find`) when prompted to "approve" them in the CLI.
+*   `enablePermanentToolApproval`: Set this to `true` if you want the ability to permanently allow safe, read-only tools (like `grep`, `ls`, `cat`) when prompted to "approve" them in the CLI.
 
 #### General & Model Routing
 ```json
@@ -271,16 +281,17 @@ Skills are modular, self-contained packages that extend an agent's capabilities 
 
 #### Superpowers
 
-[`Superpowers`](https://github.com/obra/superpowers) is an open-source skills framework that forces AI coding agents (like Claude Code and Gemini CLI) to follow strict software engineering methodologies. It overrides the agent's default behavior of jumping straight into writing code. Superpowers is designed for stability rather than immediate speed. By forcing the agent to document its intent, work in small chunks, and verify every step, it prevents the AI from losing context ("AI amnesia") during complex, long-running tasks and ensures all output is tested and architecturally sound.
+[`Superpowers`](https://github.com/obra/superpowers) is an open-source framework that forces AI coding agents (like Claude Code and Gemini CLI) to follow strict software engineering methodologies, overriding their default behavior of jumping straight into writing code. 
 
-Core Mechanics & Workflows:
-*    **Mandatory Planning:** The agent is blocked from writing implementation code until it asks clarifying questions, drafts a specification, and creates a step-by-step PLAN.md file.
-*    **Isolated Git Worktrees:** Tasks automatically execute in isolated Git worktrees, preventing experimental AI changes from modifying your main branch.
-*    **Forced TDD:** Enforces a strict Red-Green-Refactor cycle. The agent must write and run a failing test before it is allowed to write the corresponding feature code.
-*    **Systematic Debugging:** Replaces AI "guess-and-check" fixes with a mandatory, multi-phase root-cause investigation before any patch code is written.
+**When to use it:** Superpowers is excellent for "vibe coding" new repositories, architecting large features, and learning how to properly constrain an agent. However, it can be overkill and token-heavy for day-to-day operations. While its initial brainstorming phase is incredibly helpful for vetting ideas and generating detailed plans, the subsequent execution phases automate much of the workflow. This is powerful, but it takes control out of your hands and requires careful monitoring to ensure the project doesn't drift.
 
-> [!NOTE]
-> As discussed above, one of the current issues with skills is having them trigger reliably. For the superpowers skill, the easiest way to trigger the workflow is to ask it to "brainstorm" a new feature with you.
+**Core Mechanics:**
+*    **Mandatory Planning:** The agent must ask clarifying questions and draft a `PLAN.md` specification before writing any implementation code.
+*    **Isolated Git Worktrees:** Tasks execute in safe, isolated worktrees to protect your main branch.
+*    **Forced TDD:** Enforces a Red-Green-Refactor cycle. The agent must write a failing test before writing feature code.
+*    **Systematic Debugging:** Replaces AI "guess-and-check" fixes with a structured, multi-phase root-cause investigation.
+
+> **Note:** Skills can sometimes be tricky to trigger reliably. For Superpowers, the most consistent way to initiate the workflow is to explicitly ask the agent to "brainstorm" a new feature with you.
 
 </details>
 
