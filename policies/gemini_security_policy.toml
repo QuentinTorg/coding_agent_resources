@@ -1,0 +1,190 @@
+# common shell commands
+[[rule]]
+toolName = "run_shell_command"
+decision = "allow"
+priority = 100
+commandPrefix = [
+    "cd",
+    "pwd",
+    "grep",
+    "cat",
+    "ls",
+    "true",
+    "echo",
+    "tail",
+    "head",
+    "diff",
+    "file",
+    "stat"
+]
+
+# Allow find as long as it doesn't use any file mutation args
+[[rule]]
+toolName = "run_shell_command"
+decision = "allow"
+priority = 100
+commandRegex = "\\bfind\\b(?!.*\\s-(?:exec|execdir|ok|okdir|delete|fls|fprint|fprint0|fprintf)\\b)"
+# match any "find" command that doesn't have any of the listed args prefixed by a space and `-`
+
+# git commands
+[[rule]]
+toolName = "run_shell_command"
+decision = "allow"
+priority = 100
+commandPrefix = [
+    # core state and history
+    "git status",
+    "git log",
+    "git shortlog",
+    "git show",
+    "git diff",
+    "git blame",
+
+    "git ls-files",
+    "git ls-tree",
+    "git cat-file",
+    "git rev-parse",
+    "git diff-index",
+    "git diff-tree",
+
+    "git grep",
+    "git branch",
+    "git tag --list",
+
+    "git ls-remote",
+    "git remote -v",
+    "git remote show"
+]
+
+# gh CLI commands
+[[rule]]
+toolName = "run_shell_command"
+decision = "allow"
+priority = 100
+commandPrefix = [
+    "gh issue list",
+    "gh repo view",
+
+    "gh search code",
+    "gh search commits",
+    "gh search issues",
+    "gh search prs",
+    "gh search repos",
+
+    "gh issue list",
+    "gh issue view",
+    "gh issue status",
+
+    "gh pr list",
+    "gh pr view",
+    "gh pr status",
+    "gh pr checks",
+    "gh pr diff",
+
+    "gh run list",
+    "gh run view",
+    "gh run watch",
+    "gh workflow list",
+    "gh workflow view",
+
+    "gh project list",
+    "gh project view",
+    "gh project item-list",
+
+    "gh gist list",
+    "gh gist view",
+
+    "gh release list",
+    "gh release view",
+
+    "gh auth status",
+    "gh status"
+]
+
+# safe docker commands
+[[rule]]
+toolName = "run_shell_command"
+decision = "allow"
+priority = 100
+commandPrefix = [
+    "docker image ls",
+    "docker image list",
+    "docker images",
+    "docker container ls",
+    "docker container list",
+    "docker container ps",
+    "docker ps",
+    "docker logs",
+    "docker version",
+    "docker info",
+    "docker system info",
+    "docker inspect",
+    "docker stats",
+    "docker container stats",
+    "docker top",
+    "docker container top"
+]
+
+
+
+# RESTRICTIONS
+## Ask user
+
+# Block common exfiltration tools
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = ["curl", "wget", "nc", "netcat", "nmap", "ssh"]
+decision = "ask_user"
+priority = 900
+
+# Block privilege escalation
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = ["sudo", "su ", "chmod 777", "chown "]
+decision = "ask_user"
+priority = 950
+
+
+# RESTRICTIONS
+## Always deny
+
+# never allow reboot or shutdown of the host
+[[rule]]
+toolName = "run_shell_command"
+commandRegex = "^(shutdown|reboot)"
+decision = "deny"
+priority = 999
+
+# Block reading sensitive system files and secrets
+[[rule]]
+toolName = ["read_file", "grep_search", "glob"]
+argsPattern = "(\\.env|/etc/shadow|/etc/passwd|\\.ssh/|\\.aws/|\\.logqs/)"
+decision = "deny"
+priority = 900
+deny_message = "Access to system secrets and environment variables is prohibited."
+
+# Block infinite data streams via prefix match
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = ["cat /dev/urandom", "cat /dev/zero", "cat /dev/full"]
+decision = "deny"
+priority = 950
+deny_message = "Infinite-stream commands are blocked."
+
+# Block root and home directory deletion
+[[rule]]
+toolName = "run_shell_command"
+commandRegex = "\\brm\\b(?=[\\s\\S]*\\s(?:/|/\\*|~|~/|~/\\*|\\$HOME|\\$HOME/|\\$HOME/\\*)(?:\\s|$))"
+# match with any `rm` command with any set of args if any of these paths are included /, /*, ~, ~/, ~/*
+decision = "deny"
+priority = 950
+deny_message = "Destructive root and home directory deletion is blocked."
+
+# Block any unbounded wildcard deletion
+[[rule]]
+toolName = "run_shell_command"
+commandRegex = "\\brm\\b(?=[\\s\\S]*\\s\\*(?:\\s|$))"
+# match with any `rm` command with any set of arguments if a plain `*` is included
+decision = "deny"
+priority = 950
+deny_message = "Deletion with unconstrained relative wildcards is blocked. Use specific file paths to prevent accidental deletion. (Note: constrained wildcards such as `rm -rf /some/path/*` are allowed)"
