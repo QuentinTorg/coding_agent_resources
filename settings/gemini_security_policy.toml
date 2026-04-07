@@ -15,7 +15,11 @@ commandPrefix = [
     "head",
     "diff",
     "file",
-    "stat"
+    "stat",
+    "timeout",
+    "sleep",
+    "jq",
+    "wc"
 ]
 
 # Allow find as long as it doesn't use any file mutation args
@@ -25,6 +29,14 @@ decision = "allow"
 priority = 100
 commandRegex = "\\bfind\\b(?!.*\\s-(?:exec|execdir|ok|okdir|delete|fls|fprint|fprint0|fprintf)\\b)"
 # match any "find" command that doesn't have any of the listed args prefixed by a space and `-`
+
+# Allow sed as long as it is only used to query partial lines of code from a file
+[[rule]]
+toolName = "run_shell_command"
+decision = "allow"
+priority = 100
+commandRegex = "\\bsed\\s+(?:-n|-ne|-n -e)\\s+(?:['\"]?\\d+p['\"]?|['\"]?\\d+,\\d+p['\"]?)\\s+[a-zA-Z0-9_./-]+"
+# match "sed" commands that pass the arguments -n (optionally with -e), along with a line number block
 
 # git commands
 [[rule]]
@@ -122,7 +134,16 @@ commandPrefix = [
     "docker stats",
     "docker container stats",
     "docker top",
-    "docker container top"
+    "docker container top",
+
+    "docker compose logs",
+    "docker compose ls",
+    "docker compose ps",
+    "docker compose stats",
+    "docker compose top",
+    "docker compose version",
+    "docker compose volumes",
+    "docker compose wait"
 ]
 
 
@@ -188,3 +209,4 @@ commandRegex = "\\brm\\b(?=[\\s\\S]*\\s\\*(?:\\s|$))"
 decision = "deny"
 priority = 950
 deny_message = "Deletion with unconstrained relative wildcards is blocked. Use specific file paths to prevent accidental deletion. (Note: constrained wildcards such as `rm -rf /some/path/*` are allowed)"
+
