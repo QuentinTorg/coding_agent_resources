@@ -57,14 +57,28 @@ If you are a seasoned engineer but a beginner to AI agents, your instincts might
 *   **The "Pink Elephant" Problem (Speak in the Affirmative):** If you tell someone "Don't think of a pink elephant," they immediately think of one. LLMs work similarly. Instead of saying "Do not use `var`", say "Always use `const` or `let`". Provide positive instructions and clear examples of what you *want*, rather than a long list of what you *don't want*.
 *   **Directives vs. Inquiries:** Understand the difference between asking a question and giving an order. An **Inquiry** (e.g., *"Why is this function crashing?"*) is a request for text analysis. A **Directive** (e.g., *"Fix the crash"*) is an order to execute a task. Enforce this boundary in your `user_level.AGENTS.md` so the agent waits for a Directive before taking action.
 *   **Provide Examples (Few-Shot Prompting):** Agents perform significantly better when given a template or an existing code snippet to match your project's established style.
+*   **Leverage Its Tools:** The agent is not just a text generator. It has access to your terminal. Instead of pasting code into the chat, tell the agent: *"Find where the `User` class is defined and explain its dependencies."* Let it use `grep` to do the legwork.
+*   **Model Selection:** Whenever possible, prefer using larger, more capable models (like Gemini Pro) for complex tasks. They save time and reduce "churn" because they are smarter and make fewer mistakes. Switch to smaller models (like Flash) only for simple, repetitive tasks to save tokens.
 </details>
 
 <details>
 <summary><strong>3. Workflow Strategies (How to use it)</strong></summary>
 
-*   **Leverage Its Tools:** The agent is not just a text generator. It has access to your terminal. Instead of pasting code into the chat, tell the agent: *"Find where the `User` class is defined and explain its dependencies."* Let it use `grep` to do the legwork.
-*   **The "Explain It Back" Rule:** Never accept code you cannot understand. Ask the agent to explain complex functions line-by-line before integrating them.
-*   **Model Selection:** Whenever possible, prefer using larger, more capable models (like Gemini Pro) for complex tasks. They save time and reduce "churn" because they are smarter and make fewer mistakes. Switch to smaller models (like Flash) only for simple, repetitive tasks to save tokens.
+*   **The "Sensory Deprivation" Debugging Loop:** When a change doesn't work, never just say "that didn't work." The agent cannot see the physical world or run your hardware tests. You must act as the agent's eyes and sensors. Explicitly provide:
+    1. **What you commanded** (e.g., "I ran the `drive_forward` script").
+    2. **What you observed** (e.g., "The robot jerked to the left and the motor controller reported an overcurrent fault on the serial monitor").
+    3. **What you expected** (e.g., "It should have driven straight for 2 meters smoothly").
+*   **The "Closed Loop" Verification:** Left to its own devices, an agent will make a single attempt at a task and immediately declare success, even if the code is broken. To force the agent to iterate, you must give it a way to check its own work. Always include a verification mechanism in your prompt so the agent won't stop until it actually succeeds.
+    * *Software Example:* "Fix the parser bug and run `pytest test_parser.py` until the suite passes."
+    * *Hardware Example:* "Update the motor logic, push the build to the robot, and verify in the syslog that the overcurrent warning no longer appears on boot."
+*   **The "Dry Run" Methodology (Mocking Hardware):** Testing every logic change on a physical robot is slow and tedious. Because agents can write code instantly, you can ask them to generate lightweight "mocks" to test logic in isolation *before* integrating it into your complex stack. This perfectly pairs with the "Closed Loop" method above.
+    * *Example:* "Before we integrate this into the main ROS node, write a standalone python script that mocks a temperature sensor. Have the script feed fake temperature spikes into our new safety function and verify the function triggers a shutdown. Once that script passes, we will move the logic into the main C++ node."
+*   **Code Reviews & Explainability:** Never blindly accept code you cannot understand. Treat the agent as both the author and the reviewer.
+    * *Explain It Back:* If the agent writes a complex math function, ask it to explain the logic line-by-line before integrating it.
+    * *Devil's Advocate Review:* Before opening a PR, ask the agent to "act as a senior reviewer and find edge cases or race conditions in the code you just wrote."
+*   **Session Management & Context Refreshes:** Agents build up "context" (memory) as a conversation progresses. If a session gets too long, the agent becomes confused, hallucinates, and becomes significantly more expensive to run.
+    * *Fresh Eyes for Review:* Never use the same chat session to write code and review it. Always open a completely new chat for code review to ensure the agent evaluates the actual file state, rather than relying on its potentially flawed memory of what it *thinks* it wrote.
+    * *When to Reset:* Clear the chat or start a new session whenever you complete a specific goal or switch tasks (e.g., finishing the PR draft, moving from debugging to feature implementation). Keeping context small not only improves the agent's accuracy but drastically reduces your token usage and costs.
 </details>
 
 ---
