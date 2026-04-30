@@ -19,7 +19,10 @@ commandPrefix = [
     "timeout",
     "sleep",
     "jq",
-    "wc"
+    "wc",
+    "tree",
+    "df",
+    "dh"
 ]
 
 # Allow find as long as it doesn't use any file mutation args
@@ -37,6 +40,14 @@ decision = "allow"
 priority = 100
 commandRegex = "\\bsed\\s+(?:-n|-ne|-n -e)\\s+(?:['\"]?\\d+p['\"]?|['\"]?\\d+,\\d+p['\"]?)\\s+[a-zA-Z0-9_./-]+"
 # match "sed" commands that pass the arguments -n (optionally with -e), along with a line number block
+
+# Allow date as long as it doesn't use any flags to set the system time
+[[rule]]
+toolName = "run_shell_command"
+decision = "allow"
+priority = 100
+commandRegex = "\\bdate\\b(?!.*\\s-s)(?!.*\\s--set)(?!.*\\s\\d{8,})"
+# match any "date" command that doesn't have the -s or --set flags, and doesn't contain a string of 8 or more digits
 
 # git commands
 [[rule]]
@@ -121,6 +132,8 @@ priority = 100
 commandPrefix = [
     "docker image ls",
     "docker image list",
+    "docker image inspect",
+    "docker image history",
     "docker images",
     "docker container ls",
     "docker container list",
